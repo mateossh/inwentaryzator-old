@@ -1,22 +1,15 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
   Col,
   Form,
   Modal,
 } from 'react-bootstrap';
-import { generatePDF } from '../helpers/pdf';
-import { 
-  setPdfMembersCount,
-  setPdfPaginationAlignment,
-} from '../actions';
+import { PDFGenerator } from '../helpers/pdf';
 
 export const PDFWizard = ({...props}) => {
-  const membersCount = useSelector(state => state.app.pdfMembersCount);
-  const paginationAlignment = useSelector(
-    state => state.app.pdfPaginationAlignment);
-  const dispatch = useDispatch();
+  const [membersCount, setMembersCount] = useState(3);
+  const [paginationAlignment, setPaginationAlignment] = useState('none');
 
   return (
     <Modal show={props.show} onHide={props.onHide}>
@@ -33,8 +26,7 @@ export const PDFWizard = ({...props}) => {
               id="footer-none"
               label="Brak"
               value="none"
-              onChange={(e) => { 
-                dispatch(setPdfPaginationAlignment(e.target.value)) }}
+              onChange={(e) => { setPaginationAlignment(e.target.value) }}
             />
             <Form.Check
               type="radio"
@@ -42,8 +34,7 @@ export const PDFWizard = ({...props}) => {
               id="footer-left"
               label="Lewa"
               value="left"
-              onChange={(e) => { 
-                dispatch(setPdfPaginationAlignment(e.target.value)) }}
+              onChange={(e) => { setPaginationAlignment(e.target.value) }}
             />
             <Form.Check
               type="radio"
@@ -51,8 +42,7 @@ export const PDFWizard = ({...props}) => {
               id="footer-center"
               label="Środek"
               value="center"
-              onChange={(e) => { 
-                dispatch(setPdfPaginationAlignment(e.target.value)) }}
+              onChange={(e) => { setPaginationAlignment(e.target.value) }}
             />
             <Form.Check
               type="radio"
@@ -60,8 +50,7 @@ export const PDFWizard = ({...props}) => {
               id="footer-right"
               label="Prawa"
               value="right"
-              onChange={(e) => { 
-                dispatch(setPdfPaginationAlignment(e.target.value)) }}
+              onChange={(e) => { setPaginationAlignment(e.target.value) }}
             />
           </Col>
           <Col>
@@ -70,7 +59,7 @@ export const PDFWizard = ({...props}) => {
               type="number"
               min="1"
               value={membersCount}
-              onChange={(e) => { dispatch(setPdfMembersCount(e.target.value)) }}
+              onChange={(e) => { setMembersCount(e.target.value) }}
             />
           </Col>
         </Form>
@@ -81,7 +70,13 @@ export const PDFWizard = ({...props}) => {
         </Button>
         <Button onClick={(e) => {
           e.preventDefault();
-          generatePDF();
+
+          const initConfig = {
+            membersCount,
+            paginationAlignment,
+          };
+
+          PDFGenerator(initConfig);
         }}>
           Generuj
         </Button>

@@ -1,30 +1,7 @@
-import { store } from '../store';
-const state = store.getState();
-
-// TODO: doesn't work
-export const generatePageFooter = (currentPage, pageCount) => {
-  const paginationAlignment = state.app.pdfPaginationAlignment;
-  console.log('xd', paginationAlignment);
-
-  if (paginationAlignment !== 'none') {
-    return [
-      {
-        text: `Strona ${currentPage}`,
-        alignment: `${paginationAlignment}`,
-        fontSize: 8,
-      }
-    ];
-  }
-
-  return [];
-}
-
 export const generateTableContent = (tableBody) => [{
   table: {
     headerRows: 2,
-    // widths: [ 14, 68, '*', 20, 18, 36, 36, 48 ],
     widths: [ 14, 64, '*', 20, 18, 18, 18, 18, 18, 48 ],
-    // widths: [ 'auto', 'auto', 'auto','auto','auto','auto','auto','auto','auto','auto'],
     body: tableBody,
   },
   style: ['tableText'],
@@ -63,10 +40,10 @@ export const generalFileDefinition = {
   pageOrientation: 'portrait',
   pageMargins: [20, 20, 20, 20],
   info: {
-    title: 'awesome Document',
-    author: 'john doe',
-    subject: 'subject of document',
-    keywords: 'keywords for document',
+    title: 'Inwentaryzacja',
+    author: 'Inwentaryzator',
+    // subject: 'subject of document',
+    // keywords: 'keywords for document',
   },
 };
 
@@ -107,81 +84,6 @@ export const preTableContent = [{
     },
   ],
   margin: [ 24, 36, 24, 18 ],
-}];
-
-export const postTableContent = [{
-  stack: [
-    {
-      text: 'Spis zakończono dnia .............................. o godz. ............................. na pozycji .............................',
-      style: [ 'lineHeightBig' ],
-    },
-    {
-      text: 'Wartość spisu z natury wynosi .............................. zł',
-      style: [ 'lineHeightBig' ],
-    },
-    {
-      text: 'Osoby sporządzające spis:',
-      style: [ 'lineHeightBig' ],
-    },
-    {
-      ol: [
-        {
-          columns: [
-            {
-              width: '40%',
-              stack: [
-                { text: '.........................................................' },
-                { text: '(imię i nazwisko)', style: 'textSmall' },
-              ],
-              alignment: 'center',
-            },
-            {
-              width: '4%',
-              text: '—',
-              alignment: 'center',
-            },
-            {
-              width: '30%',
-              stack: [
-                { text: '...........................................' },
-                { text: '(podpis)', style: 'textSmall' },
-              ],
-              alignment: 'center',
-            }
-          ],
-          margin: [0, 8],
-        },
-
-        {
-          columns: [
-            {
-              width: '40%',
-              stack: [
-                { text: '.........................................................' },
-                { text: '(imię i nazwisko)', style: 'textSmall' },
-              ],
-              alignment: 'center',
-            },
-            {
-              width: '4%',
-              text: '—',
-              alignment: 'center',
-            },
-            {
-              width: '30%',
-              stack: [
-                { text: '...........................................' },
-                { text: '(podpis)', style: 'textSmall' },
-              ],
-              alignment: 'center',
-            }
-          ],
-          margin: [0, 8],
-        },
-      ],
-    },
-  ],
-  margin: [ 24, 18, 24, 18 ],
 }];
 
 export const ownersSignature = [{
