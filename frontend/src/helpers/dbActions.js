@@ -29,7 +29,7 @@ export const editProduct = async (data) => {
   const reqData = {
     // Code: data.code,
     Name: data.name,
-    Price: data.unitPrice,
+    Price: data.price,
     MeasureUnit: data.measureUnit,
   };
 
