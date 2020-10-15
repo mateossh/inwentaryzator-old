@@ -5,7 +5,7 @@ to pdf and prints it.
 actions on products database:
 - viewing [done]
 - adding [done]
-- updating [partialy done - name and measure unit gets updated, price don't]
+- updating [done]
 - deleting [done]
 
 actions on stocktaking database:
@@ -14,27 +14,20 @@ actions on stocktaking database:
 - updating [done]
 - deleting [done]
 
-
-
 BUGS:
-- updating product in products database doesn't work correctly
+- there's no default radio value in pdf generation settings
 
-
-
-TODO
-- add raport options
-- - page numbers in footer (left, center, right)
-- [AddProductWizard in stocktaking] user should be able to look for product by name
+TODO:
+- refactor whole PDF generation thingy
+- use memoization
 - error handling
+- [AddProductWizard in stocktaking] user should be able to look for product by name
 - add ability to export current Stocktaking to json and download for safety
 - add importing data from "O.G Inwentaryzator"
 
-- mDNS in backend ?????? ?????????????????????????????????????/
-
 - edit manifest.json
 - save current view to localStorage
-
-
+- create docker-compose
 
 NOTES:
 - dev mode doesn't work if you don't install react and redux dev tools extensions
