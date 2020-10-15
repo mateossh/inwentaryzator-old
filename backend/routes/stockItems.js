@@ -38,24 +38,25 @@ router.post('/', (req, res) => {
 });
 
 // UPDATE STOCK ITEM WITH CODE
-// NOTE: this returns error even if update status is success. weird
 router.put('/:code', (req, res) => {
-  db.StockItem.update(
-    {
-      Amount: req.body.Amount,
-    },
-    {
-      where: { Code: req.params.code }
-    }
-  ).then(result => {
-    res.status(200).json({ message: 'Stock item updated successfully' });
+  if (req.body.Amount === '') {
+    res.status(400).json({ message: 'Error! At least one field is empty' });
+    return;
+  }
+
+  db.StockItem.findOne({
+    where: { Code: req.params.code }
+  }).then(res => {
+    res.update({ Amount: req.body.Amount }).then(res => {
+      res.status(200).json({ message: 'Stock item updated successfully' });
+    });
   }).catch(err => {
     res.status(400).json({ message: 'Error', error: err });
   });
+  return;
 });
 
 // DELETE STOCK ITEM WITH CODE
-// NOTE: behavior same as updating - error even deleting was successful
 router.delete('/:code', (req, res) => {
   db.StockItem.destroy({
     where: { Code: req.params.code }

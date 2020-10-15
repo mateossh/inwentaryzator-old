@@ -25,22 +25,26 @@ router.post('/', (req, res) => {
 });
 
 // UPDATE PRODUCT WITH CODE
-// NOTE: this returns error even if update status is success. weird
 router.put('/:code', (req, res) => {
-  db.Product.update(
-    {
+  if (req.body.Name === '' || req.body.Price === '' || req.body.MeasureUnit === '') {
+    res.status(400).json({ message: 'Error! At least one field is empty' });
+    return;
+  }
+
+  db.Product.findOne({
+    where: { Code: req.params.code }
+  }).then(res => {
+    res.update({
       Name: req.body.Name,
       Price: req.body.Price,
       MeasureUnit: req.body.MeasureUnit,
-    },
-    {
-      where: { Code: req.params.code }
-    }
-  ).then(res => {
-    res.status(200).json({ message: 'Produt updated successfully' });
+    }).then(res => {
+      res.status(200).json({ message: 'Product updated successfully' });
+    });
   }).catch(err => {
     res.status(400).json({ message: 'Error', error: err });
   });
+  return;
 });
 
 // DELETE PRODUCT WITH CODE
