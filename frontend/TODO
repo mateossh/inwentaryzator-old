@@ -1,0 +1,40 @@
+IDEA:
+User creates/has database with products, do the stocktaking, exports stocktaking
+to pdf and prints it.
+
+actions on products database:
+- viewing [done]
+- adding [done]
+- updating [partialy done - name and measure unit gets updated, price don't]
+- deleting [done]
+
+actions on stocktaking database:
+- viewing [done]
+- adding [done]
+- updating [done]
+- deleting [done]
+
+
+
+BUGS:
+- updating product in products database doesn't work correctly
+
+
+
+TODO
+- add raport options
+- - page numbers in footer (left, center, right)
+- [AddProductWizard in stocktaking] user should be able to look for product by name
+- error handling
+- add ability to export current Stocktaking to json and download for safety
+- add importing data from "O.G Inwentaryzator"
+
+- mDNS in backend ?????? ?????????????????????????????????????/
+
+- edit manifest.json
+- save current view to localStorage
+
+
+
+NOTES:
+- dev mode doesn't work if you don't install react and redux dev tools extensions

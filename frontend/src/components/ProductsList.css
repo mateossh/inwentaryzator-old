@@ -1,0 +1,49 @@
+.dirty-workaround {
+  width: 800px;
+  height: 400px;
+  overflow-y: scroll;
+}
+
+.ProductsList__table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.ProductsList__title {
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: 12px 0;
+}
+
+.ProductsList__head th {
+  padding: 0 16px;
+  vertical-align: middle !important;
+  text-align: center;
+}
+
+.ProductsList__tabledata td {
+  border: 1px solid black;
+  padding: 6px;
+  vertical-align: center;
+}
+
+.ProductsList__code {
+  width: 12%;
+}
+.ProductsList__actions {
+  width: 12%;
+  text-align: center;
+}
+.ProductsList__price {
+  width: 7%;
+  text-align: right;
+}
+
+.ProductsList__ultrasmall {
+  width: 3%;
+}
+
+.ProductsList__small {
+  width: 7%;
+}
