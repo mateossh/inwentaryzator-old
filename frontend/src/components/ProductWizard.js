@@ -24,12 +24,24 @@ export const ProductWizard = ({
   const [amount, setAmount] = useState('');
   const products = useSelector(state => state.products.products);
   const data = { name, code, price, measureUnit, amount };
+  const [isSearchByNameFormVisible, setSearchByNameFormVisibility] = useState(false);
+  const [searchName, setSearchName] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
   const findProductNameWithCode = (code) => {
     const results = products.filter(product => product.Code === code);
     results.length > 0
       ? setName(results[0].Name)
       : setName('')
+  }
+
+
+  const findProductWithName = (searchedPhrase) => {
+    const results = products.filter(product => product.Name.includes(searchedPhrase));
+    console.log('findProduct with name', results);
+    results.length > 0
+      ? setSearchResults(results)
+      : setSearchResults([])
   }
 
   useEffect(() => {
@@ -125,6 +137,47 @@ export const ProductWizard = ({
                 }}/>
             </Col>
           </Form.Row>}
+          {props.mode === 'stock' && <Form.Row>
+            <Button onClick={() => { setSearchByNameFormVisibility(!isSearchByNameFormVisible) }}>Szukaj produktu po nazwie</Button>
+          </Form.Row>}
+          {isSearchByNameFormVisible && <>
+            <Form.Row>
+              <Col>
+                <Form.Control
+                  placeholder="Nazwa produktu"
+                  name="searchName"
+                  value={searchName}
+                  onChange={(e) => {
+                    setSearchName(e.target.value);
+                    if (props.mode === 'stock')
+                      findProductWithName(e.target.value);
+                  }}/>
+              </Col>
+              </Form.Row>
+              <Form.Row>
+              <ul>
+                {searchResults.map((result, key) => (
+                  <li key={key}>
+                    {result.Name} - {result.Code}
+                    <Button
+                      onClick={() => {
+                        // apply results
+                        setName(result.Name);
+                        setCode(result.Code);
+                        // clear search results
+                        setSearchName('');
+                        setSearchResults([]);
+                        // hide search form
+                        setSearchByNameFormVisibility(false);
+                      }}
+                    >
+                      Wybierz
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </Form.Row>
+          </>}
         </Form>
       </Modal.Body>
       <Modal.Footer>
