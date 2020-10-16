@@ -26,6 +26,7 @@ export const PDFWizard = ({...props}) => {
               id="footer-none"
               label="Brak"
               value="none"
+              checked={paginationAlignment === 'none'}
               onChange={(e) => { setPaginationAlignment(e.target.value) }}
             />
             <Form.Check
@@ -34,6 +35,7 @@ export const PDFWizard = ({...props}) => {
               id="footer-left"
               label="Lewa"
               value="left"
+              checked={paginationAlignment === 'left'}
               onChange={(e) => { setPaginationAlignment(e.target.value) }}
             />
             <Form.Check
@@ -42,6 +44,7 @@ export const PDFWizard = ({...props}) => {
               id="footer-center"
               label="Środek"
               value="center"
+              checked={paginationAlignment === 'center'}
               onChange={(e) => { setPaginationAlignment(e.target.value) }}
             />
             <Form.Check
@@ -50,6 +53,7 @@ export const PDFWizard = ({...props}) => {
               id="footer-right"
               label="Prawa"
               value="right"
+              checked={paginationAlignment === 'right'}
               onChange={(e) => { setPaginationAlignment(e.target.value) }}
             />
           </Col>
