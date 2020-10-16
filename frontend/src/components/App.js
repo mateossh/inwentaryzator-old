@@ -33,6 +33,12 @@ export default function App() {
           component: <StockView />
         });
         break;
+      case 'Home':
+        dispatch({
+          type: 'SET_VIEW_COMPONENT',
+          component: <HomeView />
+        });
+        break;
       default:
         dispatch({
           type: 'SET_VIEW_COMPONENT',
@@ -45,7 +51,11 @@ export default function App() {
   return (
     <Container>
       <Navbar bg="light">
-        <Navbar.Brand>Inwentaryzator</Navbar.Brand>
+        <Navbar.Brand
+          onClick={() => dispatch({ type: 'SET_CURRENT_VIEW', view: 'Home' })}
+        >
+          Inwentaryzator
+        </Navbar.Brand>
         <Button
           variant="primary"
           onClick={() => dispatch({ type: 'SET_CURRENT_VIEW', view: 'ProductsList' })}
