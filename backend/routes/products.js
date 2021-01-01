@@ -20,7 +20,7 @@ router.post('/', (req, res) => {
   }).then(result => {
     res.status(201).json({ message: 'Product added successfully' });
   }).catch(err => {
-    res.status(400).json({ message: 'Error', error: err });
+    res.status(400).json({ message: 'Error', ...err });
   });
 });
 
@@ -42,7 +42,7 @@ router.put('/:code', (req, res) => {
       res.status(200).json({ message: 'Product updated successfully' });
     });
   }).catch(err => {
-    res.status(400).json({ message: 'Error', error: err });
+    res.status(400).json({ message: 'Error', ...err });
   });
   return;
 });
@@ -55,7 +55,7 @@ router.delete('/:code', (req, res) => {
   }).then(res => {
     res.status(200).json({ message: 'Produt updated successfully' });
   }).catch(err => {
-    res.status(400).json({ message: 'Error', error: err });
+    res.status(400).json({ message: 'Error', ...err });
   });
 });
 

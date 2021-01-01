@@ -8,5 +8,7 @@ export const makeAPIRequest = async (url, method, data) => {
     },
   };
   const res = await fetch(url, config);
-  return res.json();
+  // return [res.json(), res.status];
+  // return res.json();
+  return res;
 };

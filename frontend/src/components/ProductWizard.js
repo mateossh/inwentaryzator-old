@@ -28,6 +28,9 @@ export const ProductWizard = ({
   const [searchName, setSearchName] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
+  const [isErrorOccured, setErrorState] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const findProductNameWithCode = (code) => {
     const results = products.filter(product => product.Code === code);
     results.length > 0
@@ -59,8 +62,9 @@ export const ProductWizard = ({
       </Modal.Header>
       <Modal.Body>
         <Form>
-          {fields.includes('name') && <Form.Row>
+          {fields.includes('name') && <Form.Group>
             <Col>
+              <Form.Label>Nazwa</Form.Label>
               <Form.Control
                 disabled={disabledFields && disabledFields.includes('name')
                   ? true : false}
@@ -72,9 +76,10 @@ export const ProductWizard = ({
                   setName(e.target.value);
                 }}/>
             </Col>
-          </Form.Row>}
-          {fields.includes('code') && <Form.Row>
+          </Form.Group>}
+          {fields.includes('code') && <Form.Group>
             <Col>
+              <Form.Label>Kod Produktu</Form.Label>
               <Form.Control
                 placeholder="Kod produktu"
                 // defaultValue={props.defaultValues && props.defaultValues.code}
@@ -90,9 +95,10 @@ export const ProductWizard = ({
                     findProductNameWithCode(e.target.value);
                 }}/>
             </Col>
-          </Form.Row>}
-          {fields.includes('price') && <Form.Row>
+          </Form.Group>}
+          {fields.includes('price') && <Form.Group>
             <Col>
+              <Form.Label>Cena jednostkowa</Form.Label>
               <Form.Control
                 // defaultValue={props.defaultValues && props.defaultValues.price}
                 value={price}
@@ -106,9 +112,10 @@ export const ProductWizard = ({
                   setPrice(e.target.value);
                 }}/>
             </Col>
-          </Form.Row>}
-          {fields.includes('measureUnit') && <Form.Row>
+          </Form.Group>}
+          {fields.includes('measureUnit') && <Form.Group>
             <Col>
+              <Form.Label>Jednostka miary</Form.Label>
               <Form.Control
                 // defaultValue={props.defaultValues && props.defaultValues.measureUnit}
                 value={measureUnit}
@@ -120,9 +127,10 @@ export const ProductWizard = ({
                   setMeasureUnit(e.target.value);
                 }}/>
             </Col>
-          </Form.Row>}
-          {fields.includes('amount') && <Form.Row>
+          </Form.Group>}
+          {fields.includes('amount') && <Form.Group>
             <Col>
+              <Form.Label>Ilość</Form.Label>
               <Form.Control
                 // defaultValue={props.defaultValues && props.defaultValues.amount}
                 value={amount}
@@ -136,13 +144,23 @@ export const ProductWizard = ({
                   setAmount(e.target.value);
                 }}/>
             </Col>
-          </Form.Row>}
-          {props.mode === 'stock' && <Form.Row>
-            <Button onClick={() => { setSearchByNameFormVisibility(!isSearchByNameFormVisible) }}>Szukaj produktu po nazwie</Button>
-          </Form.Row>}
+          </Form.Group>}
+          {isErrorOccured && <Form.Group>
+            <Form.Label>Error! {errorMessage}</Form.Label>
+          </Form.Group>}
+          {props.mode === 'stock' && <Form.Group>
+            <Button
+              onClick={() => {
+                setSearchByNameFormVisibility(!isSearchByNameFormVisible)
+              }}
+            >
+              Szukaj produktu po nazwie
+            </Button>
+          </Form.Group>}
           {isSearchByNameFormVisible && <>
-            <Form.Row>
+            <Form.Group>
               <Col>
+                <Form.Label>Nazwa produktu</Form.Label>
                 <Form.Control
                   placeholder="Nazwa produktu"
                   name="searchName"
@@ -153,8 +171,8 @@ export const ProductWizard = ({
                       findProductWithName(e.target.value);
                   }}/>
               </Col>
-              </Form.Row>
-              <Form.Row>
+              </Form.Group>
+              <Form.Group>
               <ul>
                 {searchResults.map((result, key) => (
                   <li key={key}>
@@ -176,7 +194,7 @@ export const ProductWizard = ({
                   </li>
                 ))}
               </ul>
-            </Form.Row>
+            </Form.Group>
           </>}
         </Form>
       </Modal.Body>
@@ -184,10 +202,22 @@ export const ProductWizard = ({
         <Button onClick={() => { props.onHide(); }}>
           Zamknij
         </Button>
-        <Button onClick={(e) => {
+        <Button onClick={async (e) => {
             e.preventDefault();
-            props.buttons.onClick(data);
-            props.onHide();
+            const res = await props.buttons.onClick(data);
+            const errorDetails = await res.json();
+
+            if (res.status === 200 || res.status === 201) {
+              props.onHide();
+              setErrorMessage('');
+              setErrorState(false);
+            }
+
+            if (res.status === 400) {
+              setErrorState(true);
+              setErrorMessage(errorDetails.errors[0].message);
+              console.error('ERROR OCCURED', errorDetails);
+            }
           }}>{props.buttons.title}</Button>
       </Modal.Footer>
     </Modal>

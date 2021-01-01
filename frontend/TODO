@@ -14,20 +14,22 @@ actions on stocktaking database:
 - updating [done]
 - deleting [done]
 
-BUGS:
-- there's no default radio value in pdf generation settings
+BUGS: none ;]
+
+IN-PROGRESS:
 
 TODO:
-- refactor whole PDF generation thingy
-- use memoization
 - error handling
-- [AddProductWizard in stocktaking] user should be able to look for product by name
+- refactor whole PDF generation thingy
+- refactor redux bits
+- create docker-compose
+- use memoization
 - add ability to export current Stocktaking to json and download for safety
 - add importing data from "O.G Inwentaryzator"
-
 - edit manifest.json
-- save current view to localStorage
-- create docker-compose
+- create readme for main / frontend / backend
+- publish x)
+- setup demo?
 
 NOTES:
 - dev mode doesn't work if you don't install react and redux dev tools extensions
