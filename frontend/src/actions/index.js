@@ -86,3 +86,15 @@ export const fetchStock = () => {
       .then(json => dispatch(receiveStock(json)));
   };
 };
+
+// ============================ TOAST =================================
+
+export const addToast = (toast) => ({
+  type: 'ADD_TOAST',
+  toast,
+});
+
+export const hideToast = (toastId) => ({
+  type: 'HIDE_TOAST',
+  toastId,
+});
