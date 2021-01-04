@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import {
-  Button,
-  Col,
-  Form,
-  Modal,
-} from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 
 // mode => 'products' or 'stock'
 export const ProductWizard = ({

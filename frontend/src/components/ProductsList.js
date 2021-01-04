@@ -1,10 +1,9 @@
 import React from 'react';
-import {
-  Button,
-  Table,
-} from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table';
+
 import { formatPrice } from '../helpers/utils';
-import './ProductsList.css';
+import '../stylesheets/ProductsList.css';
 
 /*
  * NOTE: refactor props.compact and props.full to one prop (mode/type?)

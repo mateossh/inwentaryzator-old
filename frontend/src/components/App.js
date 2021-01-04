@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  Container,
-  Button,
-  Navbar,
-} from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+
 import HomeView from '../views/HomeView';
 import ProductsListView from '../views/ProductsListView';
 import StockView from '../views/StockView';
 import { fetchProducts, fetchStock } from '../actions';
-import './App.css';
+import '../stylesheets/App.css';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -56,18 +56,24 @@ export default function App() {
         >
           Inwentaryzator
         </Navbar.Brand>
-        <Button
-          variant="primary"
-          onClick={() => dispatch({ type: 'SET_CURRENT_VIEW', view: 'ProductsList' })}
-        >
-          Lista produktów w bazie
-        </Button>
-        <Button
-          variant="primary"
-          onClick={() => dispatch({ type: 'SET_CURRENT_VIEW', view: 'Stock' })}
-        >
-          Przeglądaj obecną inwentaryzację
-        </Button>
+        <Nav className="mr-auto">
+          <Nav.Item className="mx-1">
+            <Button
+              variant="primary"
+              onClick={() => dispatch({ type: 'SET_CURRENT_VIEW', view: 'ProductsList' })}
+            >
+              Lista produktów w bazie
+            </Button>
+          </Nav.Item>
+          <Nav.Item className="mx-1">
+            <Button
+              variant="primary"
+              onClick={() => dispatch({ type: 'SET_CURRENT_VIEW', view: 'Stock' })}
+            >
+              Przeglądaj obecną inwentaryzację
+            </Button>
+        </Nav.Item>
+      </Nav>
       </Navbar>
       <Container>
         {viewComponent}

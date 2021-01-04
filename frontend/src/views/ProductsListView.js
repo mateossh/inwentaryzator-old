@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  Col,
-  Button,
-  Form,
-} from 'react-bootstrap';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+
 import ProductsList from '../components/ProductsList';
 import AddProductWizard from '../components/AddProductWizard';
 import EditProductWizard from '../components/EditProductWizard';
@@ -41,12 +40,20 @@ export const ProductsListView = () => {
   return (
     <React.Fragment>
       <Form.Row>
-        <Col><h2>Widok listy produktów</h2></Col>
         <Col>
-          <Button onClick={() => dispatch(setAddFormVisibility(true))}>
+          <h2>Widok listy produktów</h2>
+        </Col>
+        <Col>
+          <Button
+            className="mx-1"
+            onClick={() => dispatch(setAddFormVisibility(true))}
+          >
             Dodaj nowy produkt
           </Button>
-          <Button onClick={() => setFilterFormVisibility(!isFilterFormVisible)}>
+          <Button
+            className="mx-1"
+            onClick={() => setFilterFormVisibility(!isFilterFormVisible)}
+          >
             Filtruj listę
           </Button>
         </Col>

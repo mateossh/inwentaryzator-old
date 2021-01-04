@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import {
-  Col,
-  Form,
-} from 'react-bootstrap';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
 
 export const FilterListForm = () => {
   const [name, setName] = useState('');

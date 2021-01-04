@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  Button,
-  Col,
-  Form
-} from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+
 import ProductsList from '../components/ProductsList';
 import AddProductWizard from '../components/AddProductWizard';
 import EditProductWizard from '../components/EditProductWizard';
@@ -46,8 +45,18 @@ export const StockView = () => {
       <Form.Row>
         <Col><h2>Widok spisu z natury</h2></Col>
         <Col>
-          <Button onClick={() => dispatch(setAddFormVisibility(true))}>Dodaj produkt</Button>
-          <Button onClick={() => dispatch(setPdfFormVisibility(true))}>Generuj PDF</Button>
+          <Button
+            className="mx-1"
+            onClick={() => dispatch(setAddFormVisibility(true))}
+          >
+            Dodaj produkt
+          </Button>
+          <Button
+            className="mx-1"
+            onClick={() => dispatch(setPdfFormVisibility(true))}
+          >
+            Generuj PDF
+          </Button>
         </Col>
       </Form.Row>
       <ProductsList
