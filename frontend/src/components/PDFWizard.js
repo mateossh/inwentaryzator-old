@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
@@ -17,44 +19,19 @@ export const PDFWizard = ({...props}) => {
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Col>
+          <Col className="my-2">
             <h5>Numerowanie stron</h5>
-            <Form.Check
-              type="radio"
+            <ToggleButtonGroup
               name="footer-page-number"
-              id="footer-none"
-              label="Brak"
-              value="none"
-              checked={paginationAlignment === 'none'}
-              onChange={(e) => { setPaginationAlignment(e.target.value) }}
-            />
-            <Form.Check
+              onChange={setPaginationAlignment}
               type="radio"
-              name="footer-page-number"
-              id="footer-left"
-              label="Lewa"
-              value="left"
-              checked={paginationAlignment === 'left'}
-              onChange={(e) => { setPaginationAlignment(e.target.value) }}
-            />
-            <Form.Check
-              type="radio"
-              name="footer-page-number"
-              id="footer-center"
-              label="Środek"
-              value="center"
-              checked={paginationAlignment === 'center'}
-              onChange={(e) => { setPaginationAlignment(e.target.value) }}
-            />
-            <Form.Check
-              type="radio"
-              name="footer-page-number"
-              id="footer-right"
-              label="Prawa"
-              value="right"
-              checked={paginationAlignment === 'right'}
-              onChange={(e) => { setPaginationAlignment(e.target.value) }}
-            />
+              value={paginationAlignment}
+            >
+              <ToggleButton value="none">Brak</ToggleButton>
+              <ToggleButton value="left">Lewa</ToggleButton>
+              <ToggleButton value="center">Środek</ToggleButton>
+              <ToggleButton value="right">Prawa</ToggleButton>
+            </ToggleButtonGroup>
           </Col>
           <Col>
             <h5>Liczba osób sporządzających spis</h5>
