@@ -8,7 +8,12 @@ import Nav from 'react-bootstrap/Nav';
 import HomeView from '../views/HomeView';
 import ProductsListView from '../views/ProductsListView';
 import StockView from '../views/StockView';
-import { fetchProducts, fetchStock } from '../actions';
+import {
+  fetchProducts,
+  fetchStock,
+  setViewComponent,
+  setCurrentView,
+} from '../actions';
 import '../stylesheets/App.css';
 
 export default function App() {
@@ -22,28 +27,16 @@ export default function App() {
   useEffect(() => {
     switch(currentView) {
       case 'ProductsList':
-        dispatch({
-          type: 'SET_VIEW_COMPONENT',
-          component: <ProductsListView />
-        });
+        dispatch(setViewComponent(<ProductsListView />));
         break;
       case 'Stock':
-        dispatch({
-          type: 'SET_VIEW_COMPONENT',
-          component: <StockView />
-        });
+        dispatch(setViewComponent(<StockView />));
         break;
       case 'Home':
-        dispatch({
-          type: 'SET_VIEW_COMPONENT',
-          component: <HomeView />
-        });
+        dispatch(setViewComponent(<HomeView />));
         break;
       default:
-        dispatch({
-          type: 'SET_VIEW_COMPONENT',
-          component: <HomeView />
-        });
+        dispatch(setViewComponent(<HomeView />));
         break;
     }
   }, [currentView]);
@@ -52,7 +45,7 @@ export default function App() {
     <Container>
       <Navbar bg="light">
         <Navbar.Brand
-          onClick={() => dispatch({ type: 'SET_CURRENT_VIEW', view: 'Home' })}
+          onClick={() => dispatch(setCurrentView('Home'))}
         >
           Inwentaryzator
         </Navbar.Brand>
@@ -60,7 +53,7 @@ export default function App() {
           <Nav.Item className="mx-1">
             <Button
               variant="primary"
-              onClick={() => dispatch({ type: 'SET_CURRENT_VIEW', view: 'ProductsList' })}
+              onClick={() => dispatch(setCurrentView('ProductsList'))}
             >
               Lista produktów w bazie
             </Button>
@@ -68,7 +61,7 @@ export default function App() {
           <Nav.Item className="mx-1">
             <Button
               variant="primary"
-              onClick={() => dispatch({ type: 'SET_CURRENT_VIEW', view: 'Stock' })}
+              onClick={() => dispatch(setCurrentView('Stock'))}
             >
               Przeglądaj obecną inwentaryzację
             </Button>
