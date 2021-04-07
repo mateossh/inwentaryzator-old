@@ -1,4 +1,13 @@
 // ============================== APP ====================================
+export const setBackendHealth = (res) => {
+  const health = res === 200 ? true : false;
+
+  return {
+    type: 'SET_BACKEND_HEALTH',
+    health,
+  }
+};
+
 export const setCurrentView = (view) => ({
   type: 'SET_CURRENT_VIEW',
   view,

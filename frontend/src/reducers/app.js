@@ -1,5 +1,10 @@
 export const app = (state = {}, action) => {
   switch (action.type) {
+  case 'SET_BACKEND_HEALTH':
+    return {
+      ...state,
+      health: action.health,
+    };
   case 'SET_CURRENT_VIEW':
     return {
       ...state,

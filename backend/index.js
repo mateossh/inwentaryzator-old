@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const db = require('./db');
 const products = require('./routes/products');
 const stockItems = require('./routes/stockItems');
+const healthcheck = require('./routes/healthcheck');
 
 const port = 8080;
 const app = express();
@@ -23,6 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api/v1/product', products);
 app.use('/api/v1/stock', stockItems);
+app.use('/healthcheck', healthcheck);
 
 app.get('/', (req, res) => {
   res.send('ecks deee');
