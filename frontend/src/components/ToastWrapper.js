@@ -24,6 +24,7 @@ export const ToastWrapper = () => {
           className="p-1"
           show={toast.isVisible}
           onClose={() => dispatch(hideToast(toast.id))}
+          key={toast.id}
         >
         <Toast.Header>
           <strong className="mr-auto">{toast.title}</strong>
