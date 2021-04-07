@@ -9,13 +9,12 @@ export const FilterListForm = ({ data: products, ...props }) => {
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
 
-
   const FilterList = (data, name, code) => {
     const filteredProducts = data.filter(product => {
-      if (name != '') {
+      if (name !== '') {
         return product.Name.includes(name);
       }
-      if (code != '') {
+      if (code !== '') {
         return product.Code.includes(code);
       }
 
