@@ -206,9 +206,9 @@ export const ProductWizard = ({
             const errorDetails = await res.json();
 
             if (res.status === 200 || res.status === 201) {
-              props.onHide();
               setErrorMessage('');
               setErrorState(false);
+              props.onHide();
             }
 
             if (res.status === 400) {
