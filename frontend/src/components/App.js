@@ -40,7 +40,7 @@ export default function App() {
         dispatch(setViewComponent(<HomeView />));
         break;
     }
-  }, [currentView]);
+  }, [currentView]); // eslint-disable-line
 
   return (
     <>

@@ -25,7 +25,7 @@ export const StockView = () => {
   // NOTE: isn't this blocking rendering app ???
   useEffect(() => {
     dispatch(fetchStock());
-  }, []);
+  }, []); // eslint-disable-line
 
   const actions = [
     {

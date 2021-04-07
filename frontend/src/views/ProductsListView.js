@@ -22,7 +22,7 @@ export const ProductsListView = () => {
   // NOTE: isn't this blocking rendering app ???
   useEffect(() => {
     dispatch(fetchProducts());
-  }, []);
+  }, []); // eslint-disable-line
 
   const productsListActions = [
     {
