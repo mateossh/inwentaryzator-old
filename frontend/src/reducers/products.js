@@ -18,6 +18,11 @@ export const products = (state = {}, action) => {
       products: action.products,
       status: 'RECEIVED',
     };
+  case 'RECEIVE_PRODUCTS_VIEW':
+    return {
+      ...state,
+      productsView: action.products,
+    };
   default:
     return state;
   }

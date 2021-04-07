@@ -1,13 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
+import { receiveProductsView } from '../actions';
 
-export const FilterListForm = () => {
+export const FilterListForm = ({ data: products, ...props }) => {
+  const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
+
+
+  const FilterList = (data, name, code) => {
+    const filteredProducts = data.filter(product => {
+      if (name != '') {
+        return product.Name.includes(name);
+      }
+      if (code != '') {
+        return product.Code.includes(code);
+      }
+
+      return product;
+    });
+
+    dispatch(receiveProductsView(filteredProducts));
+  };
+
+  useEffect(() => {
+    FilterList(products, name, code);
+  }, [name, code]);
+
   return (
     <Form>
       <h2>Filtruj liste produktów</h2>
+      <p>Znajdź produkt po nazwie LUB kodzie produktu</p>
       <Form.Row>
         <Col>
           <Form.Control
@@ -15,7 +40,6 @@ export const FilterListForm = () => {
             name="name"
             onChange={(e) => {
               setName(e.target.value);
-              FilterList(name, code);
             }}/>
         </Col>
         <Col>
@@ -26,7 +50,6 @@ export const FilterListForm = () => {
             min="1"
             onChange={(e) => {
               setCode(e.target.value);
-              FilterList(name, code);
             }}/>
         </Col>
       </Form.Row>
@@ -36,6 +59,3 @@ export const FilterListForm = () => {
 
 export default FilterListForm;
 
-const FilterList = (name, code) => {
-  console.log('XXXX: implement me ;]', name, code);
-};

@@ -66,6 +66,11 @@ export const fetchProducts = () => {
   };
 };
 
+export const receiveProductsView = (products) => ({
+  type: 'RECEIVE_PRODUCTS_VIEW',
+  products,
+});
+
 // ============================ STOCK =================================
 
 export const requestStock = () => ({

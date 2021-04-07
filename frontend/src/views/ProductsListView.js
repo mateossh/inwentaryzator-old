@@ -14,15 +14,22 @@ import { fetchProducts, setAddFormVisibility } from '../actions';
 export const ProductsListView = () => {
   const dispatch = useDispatch();
   const products = useSelector(state => state.products.products);
+  const productsView = useSelector(state => state.products.productsView);
   const isAddFormVisible = useSelector(state => state.app.addFormVisibility);
   const isEditFormVisible = useSelector(state => state.app.editFormVisibility);
 
   const [isFilterFormVisible, setFilterFormVisibility] = useState(false);
 
+  const productsListData =
+    productsView !== undefined && productsView.length >= 0
+      ? productsView
+      : products;
+
   // NOTE: isn't this blocking rendering app ???
   useEffect(() => {
     dispatch(fetchProducts());
   }, []); // eslint-disable-line
+
 
   const productsListActions = [
     {
@@ -58,14 +65,14 @@ export const ProductsListView = () => {
           </Button>
         </Col>
       </Form.Row>
+      {isFilterFormVisible && <FilterListForm data={products} />}
       <ProductsList
         compact
         actions={productsListActions}
         title="Lista produktów w bazie danych"
-        data={products} />
+        data={productsListData} />
       {isAddFormVisible && <AddProductWizard view="products" />}
       {isEditFormVisible && <EditProductWizard view="products" />}
-      {isFilterFormVisible && <FilterListForm />}
     </React.Fragment>
   );
 }
