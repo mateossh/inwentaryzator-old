@@ -7,8 +7,17 @@ export const makeAPIRequest = async (url, method, data) => {
       'Content-Type': 'application/json',
     },
   };
-  const res = await fetch(url, config);
-  // return [res.json(), res.status];
-  // return res.json();
-  return res;
+
+  try {
+    const res = await fetch(url, config);
+    return res;
+  } catch (err) {
+    const options = {
+      status: 503,
+      statusText: 'Service Unavailable',
+    };
+
+    const res = new Response(null, options);
+    return res;
+  }
 };
