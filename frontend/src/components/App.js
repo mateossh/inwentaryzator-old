@@ -26,29 +26,24 @@ export default function App() {
   const viewComponent = useSelector(state => state.app.component);
   const backendHealth = useSelector(state => state.app.health);
 
-  useEffect(() => {
+  const checkHealth = () => {
     makeAPIRequest('http://localhost:8080/healthcheck', 'GET')
       .then(res => {
         dispatch(setBackendHealth(res.status));
-
-        if (res.status === 200) {
-          dispatch(fetchProducts());
-          dispatch(fetchStock());
-        }
       });
+  };
 
-    const healthInterval = setInterval(() => {
-      makeAPIRequest('http://localhost:8080/healthcheck', 'GET')
-        .then(res => dispatch(setBackendHealth(res.status)));
-    }, 15000);
+  useEffect(() => {
+    checkHealth();
 
+    const healthInterval = setInterval(checkHealth, 15000);
     return () => {
       clearInterval(healthInterval);
     }
   }, []);
 
   useEffect(() => {
-    if (backendHealth !== false) {
+    if (backendHealth === false) {
       const toast = {
         id: Date.now(),
         title: 'Bład połączenia',
