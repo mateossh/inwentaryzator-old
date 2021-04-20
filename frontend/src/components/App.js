@@ -26,11 +26,12 @@ export default function App() {
   const viewComponent = useSelector(state => state.app.component);
   const backendHealth = useSelector(state => state.app.health);
 
+  const products = useSelector(state => state.products.products);
+  const stock = useSelector(state => state.stock.products);
+
   const checkHealth = () => {
     makeAPIRequest('http://localhost:8080/healthcheck', 'GET')
-      .then(res => {
-        dispatch(setBackendHealth(res.status));
-      });
+      .then(res => dispatch(setBackendHealth(res.status)));
   };
 
   useEffect(() => {
@@ -43,6 +44,12 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (backendHealth === true && !products && !stock) {
+      console.log('[XXXX] server is up, but redux state is empty. fetching!');
+      dispatch(fetchStock());
+      dispatch(fetchProducts());
+    }
+
     if (backendHealth === false) {
       const toast = {
         id: Date.now(),
