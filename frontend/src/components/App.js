@@ -1,9 +1,5 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
 
 import ToastWrapper from './ToastWrapper';
 import HomeView from '../views/HomeView';
@@ -81,39 +77,30 @@ export default function App() {
   return (
     <>
       <ToastWrapper />
-      <Container>
-        <Navbar bg="light">
-          <Navbar.Brand
-            onClick={() => dispatch(setCurrentView('Home'))}
+      <div className="container mx-auto mb-2 py-2 bg-gray-50 flex flex-row justify-between content-center">
+        <h1
+          className="m-0 text-2xl hover:underline"
+          onClick={() => dispatch(setCurrentView('Home'))}
+        >
+          Inwentaryzator
+        </h1>
+
+        <nav>
+          <button
+            className="mx-4 p-2 hover:underline"
+            onClick={() => dispatch(setCurrentView('ProductsList'))}
           >
-            Inwentaryzator
-          </Navbar.Brand>
-          <Nav className="mr-auto">
-            <Nav.Item className="mx-1">
-              <Button
-                variant="primary"
-                onClick={() => dispatch(setCurrentView('ProductsList'))}
-              >
-                Lista produktów w bazie
-              </Button>
-            </Nav.Item>
-            <Nav.Item className="mx-1">
-              <Button
-                variant="primary"
-                onClick={() => dispatch(setCurrentView('Stock'))}
-              >
-                Przeglądaj obecną inwentaryzację
-              </Button>
-          </Nav.Item>
-        </Nav>
-        </Navbar>
-        <Container>
-          {viewComponent}
-        </Container>
-        <footer>
-          Made by Mateusz Żochowski
-        </footer>
-      </Container>
+            Lista produktów w bazie
+          </button>
+          <button
+            className="p-2 hover:underline"
+            onClick={() => dispatch(setCurrentView('Stock'))}
+          >
+            Przeglądaj obecną inwentaryzację
+          </button>
+        </nav>
+      </div>
+      <div className="container">{viewComponent}</div>
     </>
   );
 }

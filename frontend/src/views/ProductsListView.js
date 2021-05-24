@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 
 import ProductsList from '../components/ProductsList';
 import AddProductWizard from '../components/AddProductWizard';
@@ -25,47 +22,47 @@ export const ProductsListView = () => {
       ? productsView
       : products;
 
-  // NOTE: isn't this blocking rendering app ???
   useEffect(() => {
     dispatch(fetchProducts());
   }, []); // eslint-disable-line
-
 
   const productsListActions = [
     {
       title: 'Edytuj',
       onClick: initEditProduct,
-      variant: 'light',
+      variant: 'light', // NOTE: unused
     },
     {
       title: 'Usuń',
       onClick: deleteProduct,
-      variant: 'danger',
+      variant: 'danger', // NOTE: unused
     },
   ];
 
   return (
-    <React.Fragment>
-      <Form.Row>
-        <Col>
-          <h2>Widok listy produktów</h2>
-        </Col>
-        <Col>
-          <Button
-            className="mx-1"
-            onClick={() => dispatch(setAddFormVisibility(true))}
-          >
-            Dodaj nowy produkt
-          </Button>
-          <Button
-            className="mx-1"
-            onClick={() => setFilterFormVisibility(!isFilterFormVisible)}
-          >
-            Filtruj listę
-          </Button>
-        </Col>
-      </Form.Row>
+    <>
+      <div className="container px-0">
+        <div className="container my-2 px-0 flex flex-row justify-between content-center">
+          <h2 className="my-1">Widok listy produktów</h2>
+          <div>
+            <button
+              className="m-1 py-2 px-4 rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-800"
+              onClick={() => dispatch(setAddFormVisibility(true))}
+            >
+              Dodaj nowy produkt
+            </button>
+            <button
+              className="m-1 py-2 px-4 rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-800 "
+              onClick={() => setFilterFormVisibility(!isFilterFormVisible)}
+            >
+              Filtruj listę
+            </button>
+          </div>
+        </div>
+      </div>
+
       {isFilterFormVisible && <FilterListForm data={products} />}
+
       <ProductsList
         compact
         actions={productsListActions}
@@ -73,7 +70,7 @@ export const ProductsListView = () => {
         data={productsListData} />
       {isAddFormVisible && <AddProductWizard view="products" />}
       {isEditFormVisible && <EditProductWizard view="products" />}
-    </React.Fragment>
+    </>
   );
 }
 

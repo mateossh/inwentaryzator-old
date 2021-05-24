@@ -1,8 +1,5 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
 
 import ProductsList from '../components/ProductsList';
 import AddProductWizard from '../components/AddProductWizard';
@@ -22,7 +19,6 @@ export const StockView = () => {
   const isAddFormVisible = useSelector(state => state.app.addFormVisibility);
   const isEditFormVisible = useSelector(state => state.app.editFormVisibility);
 
-  // NOTE: isn't this blocking rendering app ???
   useEffect(() => {
     dispatch(fetchStock());
   }, []); // eslint-disable-line
@@ -41,24 +37,27 @@ export const StockView = () => {
   ];
 
   return (
-    <div>
-      <Form.Row>
-        <Col><h2>Widok spisu z natury</h2></Col>
-        <Col>
-          <Button
-            className="mx-1"
-            onClick={() => dispatch(setAddFormVisibility(true))}
-          >
-            Dodaj produkt
-          </Button>
-          <Button
-            className="mx-1"
-            onClick={() => dispatch(setPdfFormVisibility(true))}
-          >
-            Generuj PDF
-          </Button>
-        </Col>
-      </Form.Row>
+    <>
+        <div className="container px-0">
+        <div className="container my-2 px-0 flex flex-row justify-between content-center">
+          <h2 className="my-1">Widok spisu z natury</h2>
+          <div>
+            <button
+              className="m-1 py-2 px-4 rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-800"
+              onClick={() => dispatch(setAddFormVisibility(true))}
+            >
+              Dodaj produkt
+            </button>
+            <button
+              className="m-1 py-2 px-4 rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-800 "
+              onClick={() => dispatch(setPdfFormVisibility(true))}
+              >
+                Generuj PDF
+            </button>
+          </div>
+        </div>
+      </div>
+
       <ProductsList
         full
         actions={actions}
@@ -69,7 +68,7 @@ export const StockView = () => {
       {isPDFFormVisible && <PDFWizard
         onHide={() => dispatch(setPdfFormVisibility(false))}
         show={isPDFFormVisible} />}
-    </div>
+    </>
   );
 }
 

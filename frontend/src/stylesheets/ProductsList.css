@@ -1,7 +1,5 @@
-.dirty-workaround {
-  width: 800px;
-  height: 400px;
-  overflow-y: scroll;
+.table-cell {
+  @apply border border-gray-900;
 }
 
 .ProductsList__table {

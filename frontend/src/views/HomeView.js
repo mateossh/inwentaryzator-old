@@ -6,8 +6,7 @@ export const HomeView = () => {
 
   return (
     <React.Fragment>
-      <h1>Witaj w inwentaryzatorze</h1>
-      <p>jakaś pomoc tutaj</p>
+      <h1>Inwentaryzator</h1>
       {backendHealth && <p style={{color: 'red'}}>backend is up heheheheh</p>}
       {!backendHealth && <p>zxckzljxclkzjxc</p>}
     </React.Fragment>

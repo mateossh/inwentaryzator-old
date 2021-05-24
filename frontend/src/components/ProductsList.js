@@ -1,6 +1,4 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import Table from 'react-bootstrap/Table';
 
 import { formatPrice } from '../helpers/utils';
 import '../stylesheets/ProductsList.css';
@@ -13,54 +11,51 @@ import '../stylesheets/ProductsList.css';
  */
 export default function StocktakingTable({ ...props }) {
   return (
-    <React.Fragment>
-      <Table striped bordered hover size="sm">
-        <thead className="ProductsList__head">
-          <tr>
-            <th>Kod</th>
-            <th>Nazwa</th>
-            { props.full ? <th>Ilość</th> : undefined }
-            <th>J.m.</th>
-            <th>Cena zł</th>
-            { props.full ? <th>Wartość zł</th> : undefined }
-            { props.full ? <th>Uwagi</th> : undefined }
-            { "actions" in props ? <th>Akcje</th> : null }
-          </tr>
-        </thead>
+    <table className="table-fixed border-collapse border border-gray-900">
+      <thead className="ProductsList__head">
+        <tr>
+          <th className="w-1/12 table-cell text-xs">Kod</th>
+          <th className="w-1/2 table-cell text-xs">Nazwa</th>
+          { props.full ? <th className="table-cell text-xs">Ilość</th> : undefined }
+          <th className="w-1/12 table-cell text-xs">J.m.</th>
+          <th className="w-1/12 p-0 table-cell text-xs">Cena zł</th>
+          { props.full ? <th className="w-1/12 p-0 table-cell text-xs ">Wartość zł</th> : undefined }
+          {/* props.full ? <th className="table-cell text-xs">Uwagi</th> : undefined */}
+          { "actions" in props ? <th className="w-1/12 table-cell text-xs">Akcje</th> : null }
+        </tr>
+      </thead>
 
-        <tbody className="ProductsName__tabledata">
-          {props.data && props.data.map(item => (
-            <tr key={item.Code}>
-              <td className="ProductsList__code">{item.Code}</td>
-              <td>{item.Name}</td>
-              { props.full
-                ? <td className="ProductsList__ultrasmall">{item.Amount}</td>
-                : null }
-              <td className="ProductsList__ultrasmall">{item.MeasureUnit}</td>
-              <td className="ProductsList__price">{formatPrice(item.Price)}</td>
-              { props.full
-                ? <td className="ProductsList__price">{formatPrice(item.TotalValue)}</td>
-                : null }
-              { props.full ? <td>{item.Comments}</td> : null }
-              {"actions" in props
-                ? <td className="ProductsList__actions">
-                    {props.actions.map((action, id) =>
-                      <Button
-                        key={id}
-                        onClick={() => action.onClick(item.Code)}
-                        size="sm"
-                        variant={action.variant}
-                      >
-                        {action.title}
-                      </Button>)}
-                  </td>
-                : null}
-            </tr>
-          ))}
-          {(!props.data || props.data.length === 0 )
-            && <tr key="1"><td colSpan="8">Brak danych do wyświetlenia</td></tr>}
-        </tbody>
-      </Table>
-    </React.Fragment>
+      <tbody className="ProductsName__tabledata">
+        {props.data && props.data.map(item => (
+          <tr key={item.Code}>
+            <td className="table-cell">{item.Code}</td>
+            <td className="table-cell">{item.Name}</td>
+            { props.full
+              ? <td className="table-cell text-right">{item.Amount}</td>
+              : null }
+            <td className="table-cell">{item.MeasureUnit}</td>
+            <td className="table-cell text-right">{formatPrice(item.Price)}</td>
+            { props.full
+              ? <td className="table-cell text-right">{formatPrice(item.TotalValue)}</td>
+              : null }
+            {/* props.full ? <td className="table-cell">{item.Comments}</td> : null */}
+            {"actions" in props
+              ? <td className="table-cell">
+                  {props.actions.map((action, id) =>
+                    <button
+                      className="m-1 py-1 px-2 text-sm rounded-lg border border-gray-800"
+                      key={id}
+                      onClick={() => action.onClick(item.Code)}
+                    >
+                      {action.title}
+                    </button>)}
+                </td>
+              : null}
+          </tr>
+        ))}
+        {(!props.data || props.data.length === 0 )
+          && <tr key="1"><td className="table-cell" colSpan="8">Brak danych do wyświetlenia</td></tr>}
+      </tbody>
+    </table>
   );
 };
