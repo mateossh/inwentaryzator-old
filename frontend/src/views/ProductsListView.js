@@ -30,12 +30,12 @@ export const ProductsListView = () => {
     {
       title: 'Edytuj',
       onClick: initEditProduct,
-      variant: 'light', // NOTE: unused
+      variant: 'light',
     },
     {
       title: 'Usuń',
       onClick: deleteProduct,
-      variant: 'danger', // NOTE: unused
+      variant: 'danger',
     },
   ];
 

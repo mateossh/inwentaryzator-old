@@ -43,7 +43,11 @@ export default function StocktakingTable({ ...props }) {
               ? <td className="table-cell">
                   {props.actions.map((action, id) =>
                     <button
-                      className="m-1 py-1 px-2 text-sm rounded-lg border border-gray-800"
+                      className={
+                        `m-1 py-1 px-2 text-sm shadow-sm rounded-lg border border-gray-800
+                        ${action.variant === 'danger' ? 'text-white bg-red-600 hover:bg-red-700 border-red-700' : ''}
+                        ${action.variant === 'light' ? 'hover:bg-gray-100 border-gray-100' : ''}`
+                      }
                       key={id}
                       onClick={() => action.onClick(item.Code)}
                     >
