@@ -2,11 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import ProductsList from '../components/ProductsList';
-import AddProductWizard from '../components/AddProductWizard';
-import EditProductWizard from '../components/EditProductWizard';
+import ProductWizard from '../components/ProductWizard';
+
 import FilterListForm from '../components/FilterListForm';
-import { initEditProduct, deleteProduct } from '../helpers/dbActions';
-import { fetchProducts, setAddFormVisibility } from '../actions';
+import {
+  addProduct,
+  initEditProduct,
+  editProduct,
+  deleteProduct,
+} from '../helpers/dbActions';
+import {
+  fetchProducts,
+  setAddFormVisibility,
+  setEditFormVisibility,
+} from '../actions';
 
 export const ProductsListView = () => {
   const dispatch = useDispatch();
@@ -14,13 +23,13 @@ export const ProductsListView = () => {
   const productsView = useSelector(state => state.products.productsView);
   const isAddFormVisible = useSelector(state => state.app.addFormVisibility);
   const isEditFormVisible = useSelector(state => state.app.editFormVisibility);
+  const code = useSelector(state => state.app.editFormProductCode);
 
   const [isFilterFormVisible, setFilterFormVisibility] = useState(false);
 
-  const productsListData =
-    productsView !== undefined && productsView.length >= 0
-      ? productsView
-      : products;
+  const productsListData = productsView && productsView.length >= 0
+    ? productsView
+    : products;
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -38,6 +47,14 @@ export const ProductsListView = () => {
       variant: 'danger',
     },
   ];
+
+  const asdf = products && products.filter(product => product.Code === code);
+  let defaultValues = asdf && asdf.length > 0 && {
+    code,
+    name: asdf[0].Name,
+    price: asdf[0].Price,
+    measureUnit: asdf[0].MeasureUnit,
+  };
 
   return (
     <>
@@ -68,8 +85,24 @@ export const ProductsListView = () => {
         actions={productsListActions}
         title="Lista produktów w bazie danych"
         data={productsListData} />
-      {isAddFormVisible && <AddProductWizard view="products" />}
-      {isEditFormVisible && <EditProductWizard view="products" />}
+      {isAddFormVisible && <ProductWizard
+        buttons={{ title: 'Dodaj', onClick: addProduct }}
+        fields={['name', 'code', 'measureUnit', 'price']}
+        mode='products'
+        onHide={() => dispatch(setAddFormVisibility(false))}
+        show={isAddFormVisible}
+        title='Dodaj produkt do bazy danych'
+      />}
+      {isEditFormVisible && <ProductWizard
+        buttons={{ title: 'Edytuj', onClick: editProduct }}
+        defaultValues={defaultValues}
+        disabledFields={['code']}
+        fields={['name', 'code', 'measureUnit', 'price']}
+        onHide={() => dispatch(setEditFormVisibility(false))}
+        show={isEditFormVisible}
+        title='Edytuj produkt z bazy danych'
+        mode='products'
+      />}
     </>
   );
 }
