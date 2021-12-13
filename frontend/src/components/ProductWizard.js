@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -15,11 +15,11 @@ export const ProductWizard = ({
   // NOTE: why price and amount states are '' by default:
   // When default value was 0, number input had no placeholder, but if I set
   // that to '', it has placeholder like every other input in forms
-  const [name, setName] = useState('');
-  const [code, setCode] = useState('');
-  const [price, setPrice] = useState('');
-  const [measureUnit, setMeasureUnit] = useState('');
-  const [amount, setAmount] = useState('');
+  const [name, setName] = useState(defaultValues?.name);
+  const [code, setCode] = useState(defaultValues?.code);
+  const [price, setPrice] = useState(defaultValues?.price);
+  const [measureUnit, setMeasureUnit] = useState(defaultValues?.measureUnit);
+  const [amount, setAmount] = useState(defaultValues?.amount);
   const products = useSelector(state => state.products.products);
   const data = { name, code, price, measureUnit, amount };
   const [isSearchByNameFormVisible, setSearchByNameFormVisibility] = useState(false);
@@ -36,7 +36,6 @@ export const ProductWizard = ({
       : setName('')
   }
 
-
   const findProductWithName = (searchedPhrase) => {
     const results = products.filter(product => product.Name.includes(searchedPhrase));
     console.log('findProduct with name', results);
@@ -44,14 +43,6 @@ export const ProductWizard = ({
       ? setSearchResults(results)
       : setSearchResults([])
   }
-
-  useEffect(() => {
-    if (defaultValues && defaultValues.code) setCode(defaultValues.code);
-    if (defaultValues && defaultValues.name) setName(defaultValues.name);
-    if (defaultValues && defaultValues.price) setPrice(defaultValues.price);
-    if (defaultValues && defaultValues.measureUnit) setMeasureUnit(defaultValues.measureUnit);
-    if (defaultValues && defaultValues.amount) setAmount(defaultValues.amount);
-  }, []); // eslint-disable-line
 
   return (
     <Modal show={props.show} onHide={props.onHide}>
@@ -64,8 +55,7 @@ export const ProductWizard = ({
             <Col>
               <Form.Label>Nazwa</Form.Label>
               <Form.Control
-                disabled={disabledFields && disabledFields.includes('name')
-                  ? true : false}
+                disabled={disabledFields?.includes('name')}
                 placeholder="Nazwa"
                 name="name"
                 // defaultValue={defaultValues && defaultValues.name}
@@ -82,8 +72,7 @@ export const ProductWizard = ({
                 placeholder="Kod produktu"
                 // defaultValue={props.defaultValues && props.defaultValues.code}
                 value={code}
-                disabled={disabledFields && disabledFields.includes('code')
-                  ? true : false}
+                disabled={disabledFields?.includes('code')}
                 name="code"
                 type="number"
                 min="1"
@@ -100,8 +89,7 @@ export const ProductWizard = ({
               <Form.Control
                 // defaultValue={props.defaultValues && props.defaultValues.price}
                 value={price}
-                disabled={disabledFields && disabledFields.includes('price')
-                  ? true : false}
+                disabled={disabledFields?.includes('price')}
                 placeholder="Cena jednostkowa"
                 name="price"
                 type="number"
@@ -117,8 +105,7 @@ export const ProductWizard = ({
               <Form.Control
                 // defaultValue={props.defaultValues && props.defaultValues.measureUnit}
                 value={measureUnit}
-                disabled={disabledFields && disabledFields.includes('measureUnit')
-                  ? true : false}
+                disabled={disabledFields?.includes('measureUnit')}
                 placeholder="Jednostka miary"
                 name="measureUnit"
                 onChange={(e) => {
@@ -132,8 +119,7 @@ export const ProductWizard = ({
               <Form.Control
                 // defaultValue={props.defaultValues && props.defaultValues.amount}
                 value={amount}
-                disabled={disabledFields && disabledFields.includes('amount')
-                  ? true : false}
+                disabled={disabledFields?.includes('amount')}
                 placeholder="Ilość"
                 name="amount"
                 type="number"

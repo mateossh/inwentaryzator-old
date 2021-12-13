@@ -26,7 +26,7 @@ export default function StocktakingTable({ ...props }) {
       </thead>
 
       <tbody className="ProductsName__tabledata">
-        {props.data && props.data.map(item => (
+        {props?.data?.map(item => (
           <tr key={item.Code}>
             <td className="table-cell">{item.Code}</td>
             <td className="table-cell">{item.Name}</td>

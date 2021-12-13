@@ -15,7 +15,7 @@ export const ToastWrapper = () => {
       aria-live="polite"
       aria-atomic="true"
     >
-      {toasts.length > 0 && toasts.map(toast => (
+      {toasts?.map(toast => (
         <div
           className={`mb-2 p-2 max-w-xl bg-white border rounded ${toast.isVisible ? '' : 'hidden'}`}
           key={toast.id}
