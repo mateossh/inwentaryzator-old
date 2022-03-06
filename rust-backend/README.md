@@ -1,3 +1,5 @@
+`cargo install diesel --no-default-features -features sqlite-bundled`
+
 https://stackoverflow.com/questions/61031499/use-derive-insertable-for-float
 
 ---
