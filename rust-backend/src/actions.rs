@@ -40,3 +40,28 @@ pub fn insert_new_product(
     let new_product = new_product.to_owned();
     Ok(new_product)
 }
+
+pub fn find_products_from_stock(
+    conn: &SqliteConnection
+) -> Result<Option<Vec<models::Stock>>, DbError> {
+    use crate::schema::stock::dsl::*;
+
+    let zxcv = stock
+        .load::<models::Stock>(conn)
+        .optional()?;
+
+    Ok(zxcv)
+}
+
+pub fn insert_new_stock_product(
+    conn: &SqliteConnection,
+    new_stock_product: &models::Stock,
+) -> Result<models::Stock, DbError> {
+    use crate::schema::stock::dsl::*;
+
+    // diesel::insert_into(products).values(&new_product).execute(conn)?;
+    diesel::insert_into(stock).values(new_stock_product).execute(conn)?;
+
+    let new_stock_product = new_stock_product.to_owned();
+    Ok(new_stock_product)
+}
