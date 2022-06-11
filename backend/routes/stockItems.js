@@ -3,11 +3,11 @@ const db = require('../db');
 
 // GET ALL ITEMS FROM STOCK
 router.get('/', (req, res) => {
-  const instance = db.StockItem.findAll({
+  const instance = db.stockItem.findAll({
     include: [
       {
-        model: db.Product,
-        attributes: ['Name', 'MeasureUnit', 'Price'],
+        model: db.product,
+        attributes: ['name', 'measureUnit', 'price'],
       },
     ],
   })
@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
       result.forEach(item => {
         const copy = {};
         Object.assign(copy, item.dataValues, item.product.dataValues);
-        Object.assign(copy, { TotalValue: copy.Price * copy.Amount });
+        Object.assign(copy, { totalValue: copy.price * copy.amount });
         delete copy.product;
         finalResult.push(copy);
       });
@@ -27,9 +27,9 @@ router.get('/', (req, res) => {
 
 // ADD NEW ITEM TO STOCK
 router.post('/', (req, res) => {
-  db.StockItem.create({
-    Code: req.body.Code,
-    Amount: req.body.Amount,
+  db.stockItem.create({
+    code: req.body.code,
+    amount: req.body.amount,
   }).then(result => {
     res.status(201).json({ message: 'Stock item added successfully' });
   }).catch(err => {
@@ -39,15 +39,15 @@ router.post('/', (req, res) => {
 
 // UPDATE STOCK ITEM WITH CODE
 router.put('/:code', (req, res) => {
-  if (req.body.Amount === '') {
+  if (req.body.amount === '') {
     res.status(400).json({ message: 'Error! At least one field is empty' });
     return;
   }
 
-  db.StockItem.findOne({
-    where: { Code: req.params.code }
+  db.stockItem.findOne({
+    where: { code: req.params.code }
   }).then(res => {
-    res.update({ Amount: req.body.Amount }).then(res => {
+    res.update({ amount: req.body.amount }).then(res => {
       res.status(200).json({ message: 'Stock item updated successfully' });
     });
   }).catch(err => {
@@ -58,8 +58,8 @@ router.put('/:code', (req, res) => {
 
 // DELETE STOCK ITEM WITH CODE
 router.delete('/:code', (req, res) => {
-  db.StockItem.destroy({
-    where: { Code: req.params.code }
+  db.stockItem.destroy({
+    where: { code: req.params.code }
   }).then(result => {
     res.status(200).json({ message: 'Stock item deleted successfully' });
   }).catch(err => {

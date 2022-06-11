@@ -3,46 +3,46 @@ const sequelize = new Sequelize('sqlite::memory:');
 
 const db = {};
 
-const Product = sequelize.define('product', {
-  Code: {
+const product = sequelize.define('product', {
+  code: {
     type: DataTypes.STRING,
     allowNull: false,
     primaryKey: true,
   },
-  Name: {
+  name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  Price: {
+  price: {
     type: DataTypes.DECIMAL(12, 2),
     allowNull: false,
   },
-  MeasureUnit: {
+  measureUnit: {
     type: DataTypes.STRING,
     allowNull: false,
   }
 }, {});
 
-const StockItem = sequelize.define('stockItem', {
-  Code: {
+const stockItem = sequelize.define('stockItem', {
+  code: {
     type: DataTypes.STRING,
     allowNull: false,
     primaryKey: true,
   },
-  Amount: {
+  amount: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
 }, {});
 
-Product.sync();
-StockItem.sync();
+product.sync();
+stockItem.sync();
 
-StockItem.belongsTo(Product, { foreignKey: 'Code' });
-Product.hasOne(StockItem, { foreignKey: 'Code' });
+stockItem.belongsTo(product, { foreignKey: 'code' });
+product.hasOne(stockItem, { foreignKey: 'code' });
 
 db.sequelize = sequelize;
-db.Product = Product;
-db.StockItem = StockItem;
+db.product = product;
+db.stockItem = stockItem;
 
 module.exports = db;

@@ -4,7 +4,7 @@ const db = require('../db');
 // GET ALL PRODUCTS
 // TODO: this should return Price.toFixed(2)
 router.get('/', (req, res) => {
-  db.Product.findAll({})
+  db.product.findAll({})
     .then(result => {
       res.status(200).json(result);
     });
@@ -12,11 +12,11 @@ router.get('/', (req, res) => {
 
 // ADD NEW PRODUCT
 router.post('/', (req, res) => {
-  db.Product.create({
-    Code: req.body.Code,
-    Name: req.body.Name,
-    Price: req.body.Price,
-    MeasureUnit: req.body.MeasureUnit,
+  db.product.create({
+    code: req.body.code,
+    name: req.body.name,
+    price: req.body.price,
+    measureUnit: req.body.measureUnit,
   }).then(result => {
     console.log('bleh', result.dataValues);
     res.status(201).json({ message: 'Product added successfully', product: result.dataValues });
@@ -27,18 +27,18 @@ router.post('/', (req, res) => {
 
 // UPDATE PRODUCT WITH CODE
 router.put('/:code', (req, res) => {
-  if (req.body.Name === '' || req.body.Price === '' || req.body.MeasureUnit === '') {
+  if (req.body.name === '' || req.body.price === '' || req.body.measureUnit === '') {
     res.status(400).json({ message: 'Error! At least one field is empty' });
     return;
   }
 
-  db.Product.findOne({
-    where: { Code: req.params.code }
+  db.product.findOne({
+    where: { code: req.params.code }
   }).then(res => {
     res.update({
-      Name: req.body.Name,
-      Price: req.body.Price,
-      MeasureUnit: req.body.MeasureUnit,
+      name: req.body.name,
+      price: req.body.price,
+      measureUnit: req.body.measureUnit,
     }).then(res => {
       res.status(200).json({ message: 'Product updated successfully' });
     });
@@ -51,8 +51,8 @@ router.put('/:code', (req, res) => {
 // DELETE PRODUCT WITH CODE
 // NOTE: behavior same as updating product - error even deleting was successful
 router.delete('/:code', (req, res) => {
-  db.Product.destroy({
-    where: { Code: req.params.code }
+  db.product.destroy({
+    where: { code: req.params.code }
   }).then(res => {
     res.status(200).json({ message: 'Produt updated successfully' });
   }).catch(err => {
