@@ -18,7 +18,8 @@ router.post('/', (req, res) => {
     Price: req.body.Price,
     MeasureUnit: req.body.MeasureUnit,
   }).then(result => {
-    res.status(201).json({ message: 'Product added successfully' });
+    console.log('bleh', result.dataValues);
+    res.status(201).json({ message: 'Product added successfully', product: result.dataValues });
   }).catch(err => {
     res.status(400).json({ message: 'Error', ...err });
   });

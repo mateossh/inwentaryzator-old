@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.8.2",
     "@types/jest": "^26.0.22",
     "@types/node": "^14.14.41",
     "@types/react": "^16.9.43",
