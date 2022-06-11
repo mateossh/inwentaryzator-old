@@ -1,5 +1,5 @@
 import pdfMake from 'pdfmake';
-import pdfFonts from './vfsFonts';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
 import {
   styles,
   generalFileDefinition,
@@ -14,6 +14,8 @@ import {
   getIntegerPart,
   fractionalDigitsAsStr,
 } from './utils';
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export const PDFGenerator = ({ membersCount, paginationAlignment }) => {
   function generatePageFooter(currentPage, pageCount) {
