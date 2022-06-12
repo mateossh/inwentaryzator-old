@@ -3,61 +3,58 @@ const db = require('../db');
 
 // GET ALL PRODUCTS
 // TODO: this should return Price.toFixed(2)
-router.get('/', (req, res) => {
-  db.product.findAll({})
-    .then(result => {
-      res.status(200).json(result);
-    });
+router.get('/', async (req, res) => {
+  try {
+    const products = await db.product.findAll();
+    res.status(200).json(products);
+  } catch(e) {
+    res.status(500).json({ ...e });
+  }
 });
 
 // ADD NEW PRODUCT
-router.post('/', (req, res) => {
-  db.product.create({
+router.post('/', async (req, res) => {
+  const data = {
     code: req.body.code,
     name: req.body.name,
     price: req.body.price,
     measureUnit: req.body.measureUnit,
-  }).then(result => {
-    console.log('bleh', result.dataValues);
-    res.status(201).json({ message: 'Product added successfully', product: result.dataValues });
-  }).catch(err => {
-    res.status(400).json({ message: 'Error', ...err });
-  });
+  };
+
+  try {
+    const newProduct = await db.product.create(data);
+    res.status(201).json({ product: newProduct });
+  } catch(e) {
+    res.status(500).json({ ...e });
+  }
 });
 
 // UPDATE PRODUCT WITH CODE
-router.put('/:code', (req, res) => {
-  if (req.body.name === '' || req.body.price === '' || req.body.measureUnit === '') {
-    res.status(400).json({ message: 'Error! At least one field is empty' });
-    return;
-  }
+router.put('/:code', async (req, res) => {
+  try {
+    const foundProduct = await db.product.findOne({ where: { code: req.params.code }});
 
-  db.product.findOne({
-    where: { code: req.params.code }
-  }).then(res => {
-    res.update({
-      name: req.body.name,
-      price: req.body.price,
-      measureUnit: req.body.measureUnit,
-    }).then(res => {
-      res.status(200).json({ message: 'Product updated successfully' });
-    });
-  }).catch(err => {
-    res.status(400).json({ message: 'Error', ...err });
-  });
-  return;
+    foundProduct.name = req.body.name ? req.body.name : foundProduct.name;
+    foundProduct.price = req.body.price ? req.body.price : foundProduct.price;
+    foundProduct.measureUnit = req.body.measureUnit ? req.body.measureUnit : foundProduct.measureUnit;
+
+    const updatedProduct = await foundProduct.save();
+
+    res.status(200).json({ product: updatedProduct });
+  } catch(e) {
+    res.status(500).json({ ...e });
+  }
 });
 
 // DELETE PRODUCT WITH CODE
-// NOTE: behavior same as updating product - error even deleting was successful
-router.delete('/:code', (req, res) => {
-  db.product.destroy({
-    where: { code: req.params.code }
-  }).then(res => {
-    res.status(200).json({ message: 'Produt updated successfully' });
-  }).catch(err => {
-    res.status(400).json({ message: 'Error', ...err });
-  });
+router.delete('/:code', async (req, res) => {
+  try {
+    const destroyedRows = await db.product.destroy({ where: { code: req.params.code }});
+
+    res.status(200).json({ destroyedRows });
+  } catch(e) {
+    res.status(500).json({ ...e });
+  }
 });
 
 module.exports = router;
