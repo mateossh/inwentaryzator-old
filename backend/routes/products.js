@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
 
   try {
     const newProduct = await db.product.create(data);
-    res.status(201).json({ product: newProduct });
+    res.status(201).json(newProduct);
   } catch(e) {
     res.status(500).json({ ...e });
   }
@@ -40,7 +40,7 @@ router.put('/:code', async (req, res) => {
 
     const updatedProduct = await foundProduct.save();
 
-    res.status(200).json({ product: updatedProduct });
+    res.status(200).json(updatedProduct);
   } catch(e) {
     res.status(500).json({ ...e });
   }
