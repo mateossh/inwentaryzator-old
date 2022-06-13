@@ -2,7 +2,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 export const HomeView = () => {
-  const backendHealth = useSelector(state => state.app.health);
+  // const backendHealth = useSelector(state => state.app.health);
+  const backendHealth = undefined;
 
   return (
     <React.Fragment>

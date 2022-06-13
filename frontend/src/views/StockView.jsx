@@ -45,14 +45,14 @@ export const StockView = () => {
   ];
 
     // NOTE: x))))))
-    const asdf = products && products.filter(product => product.Code === code);
-    const zxcv = stock && stock.filter(product => product.Code === code);
+    const asdf = products && products.filter(product => product.code === code);
+    const zxcv = stock && stock.filter(product => product.code === code);
     let defaultValues = asdf && asdf.length > 0 && {
       code,
-      name: asdf[0].Name,
-      price: asdf[0].Price,
-      measureUnit: asdf[0].MeasureUnit,
-      amount: zxcv[0].Amount,
+      name: asdf[0].name,
+      price: asdf[0].price,
+      measureUnit: asdf[0].measureUnit,
+      amount: zxcv[0].amount,
     };
 
   return (

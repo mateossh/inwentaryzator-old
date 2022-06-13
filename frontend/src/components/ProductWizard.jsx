@@ -188,8 +188,9 @@ export const ProductWizard = ({
         </Button>
         <Button onClick={async (e) => {
             e.preventDefault();
-            const res = await props.buttons.onClick(data);
-            const errorDetails = await res.json();
+            console.log(`ProductWizard: onClick data ${JSON.stringify(data)}`);
+
+            const res = props.buttons.onClick(data);
 
             if (res.status === 200 || res.status === 201) {
               setErrorMessage('');

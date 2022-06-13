@@ -27,16 +27,16 @@ export default function StocktakingTable({ ...props }) {
 
       <tbody className="ProductsName__tabledata">
         {props?.data?.map(item => (
-          <tr key={item.Code}>
-            <td className="table-cell">{item.Code}</td>
-            <td className="table-cell">{item.Name}</td>
+          <tr key={item.code}>
+            <td className="table-cell">{item.code}</td>
+            <td className="table-cell">{item.name}</td>
             { props.full
-              ? <td className="table-cell text-right">{item.Amount}</td>
+              ? <td className="table-cell text-right">{item.amount}</td>
               : null }
-            <td className="table-cell">{item.MeasureUnit}</td>
-            <td className="table-cell text-right">{formatPrice(item.Price)}</td>
+            <td className="table-cell">{item.measureUnit}</td>
+            <td className="table-cell text-right">{formatPrice(item.price)}</td>
             { props.full
-              ? <td className="table-cell text-right">{formatPrice(item.TotalValue)}</td>
+              ? <td className="table-cell text-right">{formatPrice(item.totalValue)}</td>
               : null }
             {/* props.full ? <td className="table-cell">{item.Comments}</td> : null */}
             {"actions" in props
@@ -49,7 +49,7 @@ export default function StocktakingTable({ ...props }) {
                         ${action.variant === 'light' ? 'hover:bg-gray-100 border-gray-100' : ''}`
                       }
                       key={id}
-                      onClick={() => action.onClick(item.Code)}
+                      onClick={() => action.onClick(item.code)}
                     >
                       {action.title}
                     </button>)}

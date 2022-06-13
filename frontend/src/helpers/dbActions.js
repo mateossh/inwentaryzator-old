@@ -6,26 +6,7 @@ import {
 } from '../actions';
 import { store } from '../store';
 
-export const addProduct = async (data) => {
-  const reqData = {
-    Code: data.code,
-    Name: data.name,
-    Price: data.price,
-    MeasureUnit: data.measureUnit,
-  };
 
-  return await makeAPIRequest('http://localhost:8080/api/v1/product', 'POST', reqData)
-    .then(res => {
-      // console.log('hehe', res);
-      store.dispatch(fetchProducts())
-      return res;
-    });
-};
-
-export const initEditProduct = (id) => {
-  console.log('XXXX: edit', id);
-  store.dispatch(setEditFormVisibility(true, id));
-};
 
 export const editProduct = async (data) => {
   console.log('XXXX: ACTUAL EDIT PROIDUCT AKLJSHDKLAJSDKLJQWAKLDJ HAHAHAHAH LMAO');

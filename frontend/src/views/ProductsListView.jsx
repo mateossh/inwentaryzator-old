@@ -6,24 +6,29 @@ import ProductWizard from '../components/ProductWizard';
 
 import FilterListForm from '../components/FilterListForm';
 import {
-  addProduct,
-  initEditProduct,
-  editProduct,
-  deleteProduct,
+  // addProduct,
+  // initEditProduct,
+  // editProduct,
+  // deleteProduct,
 } from '../helpers/dbActions';
-import {
-  fetchProducts,
-  setAddFormVisibility,
-  setEditFormVisibility,
-} from '../actions';
+
+// import { setAddFormVisibility, setEditFormVisibility } from '../actions';
+
+
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { fetchProducts, addProduct, editProduct, deleteProduct } from '../features/products/productSlice';
 
 export const ProductsListView = () => {
-  const dispatch = useDispatch();
-  const products = useSelector(state => state.products.products);
+  // const dispatch = useDispatch();
+  //
+  const dispatch = useAppDispatch();
+  const products = useAppSelector(state => state.products.products);
+
   const productsView = useSelector(state => state.products.productsView);
-  const isAddFormVisible = useSelector(state => state.app.addFormVisibility);
-  const isEditFormVisible = useSelector(state => state.app.editFormVisibility);
-  const code = useSelector(state => state.app.editFormProductCode);
+
+  const [isAddFormVisible, setAddFormVisibility] = useState(false);
+  const [isEditFormVisible, setEditFormVisibility] = useState(false);
+  const [editFormProductCode, setEditFormProductCode] = useState(null);
 
   const [isFilterFormVisible, setFilterFormVisibility] = useState(false);
 
@@ -32,28 +37,44 @@ export const ProductsListView = () => {
     : products;
 
   useEffect(() => {
+    // TODO: REMOVE THIS!!! BAD CODE ARCHITECTURE !!!!!
     dispatch(fetchProducts());
   }, []); // eslint-disable-line
+
+  // TODO: CHANGE THIS NAME!!!!
+  const anotherNameForEditForm = (code) => {
+    setEditFormVisibility(true);
+    setEditFormProductCode(code);
+  }
+
+  const dispatchAddProduct = (product) => dispatch(addProduct(product));
+  const dispatchEditProduct = (code) => dispatch(editProduct(code));
+  const dispatchDeleteProduct = (code) => {
+    const confirmation = window.confirm(`Czy na pewno chcesz usunąć produkt o kodzie ${code} z bazy produktów?`);
+    if (confirmation) {
+      dispatch(deleteProduct(code))
+    }
+  };
 
   const productsListActions = [
     {
       title: 'Edytuj',
-      onClick: initEditProduct,
+      onClick: anotherNameForEditForm,
       variant: 'light',
     },
     {
       title: 'Usuń',
-      onClick: deleteProduct,
+      onClick: dispatchDeleteProduct,
       variant: 'danger',
     },
   ];
 
-  const asdf = products && products.filter(product => product.Code === code);
+  const asdf = products && products.filter(product => product.code === editFormProductCode);
   let defaultValues = asdf && asdf.length > 0 && {
-    code,
-    name: asdf[0].Name,
-    price: asdf[0].Price,
-    measureUnit: asdf[0].MeasureUnit,
+    code: editFormProductCode,
+    name: asdf[0].name,
+    price: asdf[0].price,
+    measureUnit: asdf[0].measureUnit,
   };
 
   return (
@@ -64,7 +85,7 @@ export const ProductsListView = () => {
           <div>
             <button
               className="m-1 py-2 px-4 rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-800"
-              onClick={() => dispatch(setAddFormVisibility(true))}
+              onClick={() => setAddFormVisibility(true)}
             >
               Dodaj nowy produkt
             </button>
@@ -86,20 +107,20 @@ export const ProductsListView = () => {
         title="Lista produktów w bazie danych"
         data={productsListData} />
       {isAddFormVisible && <ProductWizard
-        buttons={{ title: 'Dodaj', onClick: addProduct }}
+        buttons={{ title: 'Dodaj', onClick: dispatchAddProduct }}
         fields={['name', 'code', 'measureUnit', 'price']}
         mode='products'
-        onHide={() => dispatch(setAddFormVisibility(false))}
-        show={isAddFormVisible}
+        onHide={() => setAddFormVisibility(false)}
+        show={!!isAddFormVisible}
         title='Dodaj produkt do bazy danych'
       />}
       {isEditFormVisible && <ProductWizard
-        buttons={{ title: 'Edytuj', onClick: editProduct }}
+        buttons={{ title: 'Edytuj', onClick: dispatchEditProduct }}
         defaultValues={defaultValues}
         disabledFields={['code']}
         fields={['name', 'code', 'measureUnit', 'price']}
-        onHide={() => dispatch(setEditFormVisibility(false))}
-        show={isEditFormVisible}
+        onHide={() => setEditFormVisibility(false)}
+        show={!!isEditFormVisible}
         title='Edytuj produkt z bazy danych'
         mode='products'
       />}
