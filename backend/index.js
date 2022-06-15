@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api/v1/product', products);
 app.use('/api/v1/stock', stockItems);
-app.use('/healthcheck', healthcheck);
+app.use('/api/v1/healthcheck', healthcheck);
 
 app.get('/', (req, res) => {
   res.send('ecks deee');
