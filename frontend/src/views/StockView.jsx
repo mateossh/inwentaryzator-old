@@ -83,7 +83,7 @@ export const StockView = () => {
       </div>
 
       <ProductsList
-        full
+        type="full"
         actions={actions}
         title="Inwentaryzacja"
         data={stock} />

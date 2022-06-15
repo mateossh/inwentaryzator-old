@@ -82,7 +82,7 @@ export const ProductsListView = () => {
       {isFilterFormVisible && <FilterListForm data={products} />}
 
       <ProductsList
-        compact
+        type="compact"
         actions={productsListActions}
         title="Lista produktów w bazie danych"
         data={products} />
