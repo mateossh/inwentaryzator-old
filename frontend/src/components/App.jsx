@@ -4,11 +4,7 @@ import ToastWrapper from './ToastWrapper';
 import HomeView from '../views/HomeView';
 import ProductsListView from '../views/ProductsListView';
 import StockView from '../views/StockView';
-// import {
-//   setBackendHealth,
-//   addToast,
-// } from '../actions';
-// import { makeAPIRequest } from '../helpers/requests.js';
+import GeneratePDFView from '../views/GeneratePDF';
 import '../stylesheets/App.css';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -86,6 +82,9 @@ export default function App() {
       case 'Home':
         setViewComponent(<HomeView />)
         break;
+      case 'GeneratePDF':
+        setViewComponent(<GeneratePDFView />)
+        break;
       default:
         setViewComponent(<HomeView />)
         break;
@@ -108,13 +107,19 @@ export default function App() {
             className="mx-4 p-2 hover:underline"
             onClick={() => dispatch(setCurrentView('ProductsList'))}
           >
-            Lista produktów w bazie
+            Baza produktów
           </button>
           <button
             className="p-2 hover:underline"
             onClick={() => dispatch(setCurrentView('Stock'))}
           >
             Przeglądaj obecną inwentaryzację
+          </button>
+          <button
+            className="mx-4 p-2 hover:underline"
+            onClick={() => dispatch(setCurrentView('GeneratePDF'))}
+          >
+            Generuj PDF
           </button>
         </nav>
       </div>

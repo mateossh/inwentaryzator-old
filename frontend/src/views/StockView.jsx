@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import ProductsList from '../components/ProductsList';
 import ProductWizard from '../components/ProductWizard';
-import PDFWizard from '../components/PDFWizard';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import {
@@ -18,7 +17,6 @@ export const StockView = () => {
 
   const [isAddFormVisible, setAddFormVisibility] = useState(false);
   const [isEditFormVisible, setEditFormVisibility] = useState(false);
-  const [isPDFFormVisible, setPDFFormVisibility] = useState(false);
   const [editFormProductCode, setEditFormProductCode] = useState(null);
 
   const dispatchAddProductToStock = (product) => dispatch(addProductToStock(product));
@@ -72,12 +70,6 @@ export const StockView = () => {
             >
               Dodaj produkt
             </button>
-            <button
-              className={buttonClasses}
-              onClick={() => setPDFFormVisibility(true)}
-              >
-                Generuj PDF
-            </button>
           </div>
         </div>
       </div>
@@ -106,9 +98,6 @@ export const StockView = () => {
         title='Edytuj produkt w spisie z natury'
         mode="stock"
       />}
-      {isPDFFormVisible && <PDFWizard
-        onHide={() => setPDFFormVisibility(false)}
-        show={isPDFFormVisible} />}
     </>
   );
 }
