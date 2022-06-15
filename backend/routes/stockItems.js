@@ -41,8 +41,16 @@ router.post('/', async (req, res) => {
   };
 
   try {
-    const newProduct = await db.stockItem.create(data);
-    res.status(201).json(newProduct);
+    const newProductInStock = await db.stockItem.create(data);
+    const product = await db.product.findByPk(data.code);
+
+    const response = {
+      ...newProductInStock.dataValues,
+      ...product.dataValues,
+      totalValue: product.dataValues.price * newProductInStock.dataValues.amount
+    };
+
+    res.status(201).json(response);
   } catch(e) {
     res.status(500).json({ ...e });
   }
@@ -50,14 +58,35 @@ router.post('/', async (req, res) => {
 
 // UPDATE STOCK ITEM WITH CODE
 router.put('/:code', async (req, res) => {
+  const options = {
+    where: {
+      code: req.params.code
+    },
+    include: [
+      {
+        model: db.product,
+        attributes: ['name', 'measureUnit', 'price'],
+      },
+    ],
+  };
+
   try {
-    const foundRecord = await db.stockItem.findOne({ where: { code: req.params.code}});
+    const foundRecord = await db.stockItem.findOne(options);
 
     foundRecord.amount = req.body.amount ? req.body.amount : foundRecord.amount;
 
     const updatedRecord = await foundRecord.save();
 
-    res.status(200).json(updatedRecord);
+    const response = {
+      ...foundRecord.product.dataValues,
+      code: foundRecord.code,
+      amount: foundRecord.amount,
+      totalValue: foundRecord.product.dataValues.price * foundRecord.amount,
+      createdAt: foundRecord.createdAt,
+      updatedAt: foundRecord.updatedAt,
+    }
+
+    res.status(200).json(response);
   } catch(e) {
     res.status(500).json({ ...e });
   }
