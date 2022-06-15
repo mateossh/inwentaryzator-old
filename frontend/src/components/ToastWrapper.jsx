@@ -1,10 +1,10 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { hideToast } from '../actions';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { hideToast } from '../features/toasts/toastSlice';
 
 export const ToastWrapper = () => {
-  const dispatch = useDispatch();
-  const toasts = useSelector(state => state.toast.toasts);
+  const dispatch = useAppDispatch();
+  const toasts = useAppSelector(state => state.toasts);
 
   // NOTE: Aria things are from react-bootstrap
   // https://getbootstrap.com/docs/4.3/components/toasts/#placement

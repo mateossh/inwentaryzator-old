@@ -1,35 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 
 import ToastWrapper from './ToastWrapper';
 import HomeView from '../views/HomeView';
 import ProductsListView from '../views/ProductsListView';
 import StockView from '../views/StockView';
-import {
-  setBackendHealth,
-  addToast,
-} from '../actions';
-import { makeAPIRequest } from '../helpers/requests.js';
+// import {
+//   setBackendHealth,
+//   addToast,
+// } from '../actions';
+// import { makeAPIRequest } from '../helpers/requests.js';
 import '../stylesheets/App.css';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { setCurrentView } from '../features/app/appSlice';
 import { fetchProducts } from '../features/products/productSlice';
 import { fetchStock } from '../features/stock/stockSlice';
+import { createToast } from '../features/toasts/toastSlice';
 
 export default function App() {
-  // const backendHealth = useSelector(state => state.app.health);
-  //
-  // const products = useSelector(state => state.products.products);
-  // const stock = useSelector(state => state.stock.products);
-
   const dispatch = useAppDispatch();
   const currentView = useAppSelector(state => state.app.currentView);
   const [viewComponent, setViewComponent] = useState(null);
 
-  const checkHealth = () => {
-    makeAPIRequest('http://localhost:8080/healthcheck', 'GET')
-      .then(res => dispatch(setBackendHealth(res.status)));
+  let backendHealth = {};
+
+  const checkHealth = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/healthcheck');
+      const json = await response.json();
+
+      backendHealth = json;
+    } catch (e) {
+      const toast = {
+        id: Date.now(),
+        title: 'Bład połączenia',
+        message: 'Połączenie z backendem nie zostało nawiązane!',
+        isVisible: true,
+      };
+
+      dispatch(createToast(toast));
+    }
   };
 
   useEffect(() => {
@@ -46,23 +56,24 @@ export default function App() {
     dispatch(fetchStock());
   }, []);
 
-  // useEffect(() => {
-  //   if (backendHealth === true && !products && !stock) {
-  //     console.log('[XXXX] server is up, but redux state is empty. fetching!');
-  //     dispatch(fetchStock());
-  //     dispatch(fetchProducts());
-  //   }
-  //
-  //   if (backendHealth === false) {
-  //     const toast = {
-  //       id: Date.now(),
-  //       title: 'Bład połączenia',
-  //       message: 'Połączenie z backendem nie zostało nawiązane!',
-  //       isVisible: true,
-  //     };
-  //     dispatch(addToast(toast));
-  //   }
-  // }, [backendHealth]);
+  useEffect(() => {
+    if (backendHealth?.message === 'OK' && !products && !stock) {
+      console.log('[XXXX] server is up, but redux state is empty. fetching!');
+      dispatch(fetchStock());
+      dispatch(fetchProducts());
+    }
+
+    if (!backendHealth) {
+      const toast = {
+        id: Date.now(),
+        title: 'Bład połączenia',
+        message: 'Połączenie z backendem nie zostało nawiązane!',
+        isVisible: true,
+      };
+
+      dispatch(createToast(toast));
+    }
+  }, [backendHealth]);
 
   useEffect(() => {
     switch(currentView) {
@@ -83,7 +94,7 @@ export default function App() {
 
   return (
     <>
-      {/*<ToastWrapper />*/}
+      <ToastWrapper />
       <div className="container mx-auto mb-2 py-2 bg-gray-50 flex flex-row justify-between content-center">
         <h1
           className="m-0 text-2xl hover:underline"
