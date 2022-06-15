@@ -8,12 +8,68 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 //
 // }
 
+const fetchConfig = {
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+  },
+}
+
+export interface StockProduct {
+  code: string
+  amount: number
+}
+
 export const fetchStock = createAsyncThunk(
   'stock/fetchAll',
   async () => {
     const response = await fetch('http://localhost:8080/api/v1/stock');
     const stock = await response.json();
     return stock;
+  }
+)
+
+export const addProductToStock = createAsyncThunk(
+  'stock/addProduct',
+  async (product: StockProduct & BodyInit) => {
+    const config = {
+      body: JSON.stringify(product),
+      method: 'POST',
+      ...fetchConfig,
+    }
+
+    const response = await fetch('http://localhost:8080/api/v1/stock', config);
+    const createdProduct = await response.json();
+    return createdProduct;
+  }
+)
+
+export const editProductInStock = createAsyncThunk(
+  'stock/editProduct',
+  async (product: StockProduct & BodyInit) => {
+    const config = {
+      body: JSON.stringify(product),
+      method: 'PUT',
+      ...fetchConfig,
+    }
+
+    const response = await fetch(`http://localhost:8080/api/v1/stock/${product.code}`, config);
+    const editedProduct = await response.json();
+    return editedProduct;
+  }
+)
+
+export const deleteProductInStock = createAsyncThunk(
+  'stock/deleteProduct',
+  async (code: Number & BodyInit) => {
+    const config = {
+      method: 'DELETE',
+      ...fetchConfig,
+    }
+
+    const response = await fetch(`http://localhost:8080/api/v1/stock/${code}`, config);
+    const deletedProduct = await response.json();
+    return deletedProduct;
   }
 )
 
@@ -54,6 +110,76 @@ const stockSlice = createSlice({
     });
 
     builder.addCase(fetchStock.rejected, (state, action) => {
+      state.loading = 'idle';
+      state.isError = true;
+    });
+
+    builder.addCase(addProductToStock.pending, (state, action) => {
+      state.loading = 'pending';
+      state.isError = false;
+    });
+
+    builder.addCase(addProductToStock.fulfilled, (state, action) => {
+      state.loading = 'idle';
+
+      console.log('asdf', action.payload);
+      // TODO: check if user enters int instead of float in price
+      // @ts-ignore
+      state.products.push(action.payload);
+    });
+
+    builder.addCase(addProductToStock.rejected, (state) => {
+      state.loading = 'idle';
+      state.isError = true;
+    });
+
+    builder.addCase(editProductInStock.pending, (state) => {
+      state.loading = 'pending';
+      state.isError = false;
+    });
+
+    builder.addCase(editProductInStock.fulfilled, (state, action) => {
+      state.loading = 'idle';
+
+      console.log(action.payload);
+
+      // @ts-ignore
+      const productIndex = state.products.findIndex(product => product.code === action.payload.code);
+      // @ts-ignore
+      // state.products[productIndex] = action.payload;
+
+      let newObject = {};
+      Object.assign(newObject, state.products[productIndex]);
+      Object.assign(newObject, action.payload);
+
+      // TODO: it doesn't count new totalValue
+      console.log('REDUX REDUCER ', newObject);
+      // @ts-ignore
+      state.products[productIndex] = newObject;
+    });
+
+    builder.addCase(editProductInStock.rejected, (state) => {
+      state.loading = 'idle';
+      state.isError = true;
+    });
+
+    builder.addCase(deleteProductInStock.pending, (state) => {
+      state.loading = 'pending';
+      state.isError = false;
+    });
+
+    builder.addCase(deleteProductInStock.fulfilled, (state, action) => {
+      state.loading = 'idle';
+
+      // @ts-ignore
+      const productIndex = state.products.findIndex(product => product.code === action.payload.code);
+
+      if (action.payload.destroyedRows == 1) {
+        state.products.splice(productIndex, 1);
+      }
+    });
+
+    builder.addCase(deleteProductInStock.rejected, (state) => {
       state.loading = 'idle';
       state.isError = true;
     });

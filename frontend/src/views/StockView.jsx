@@ -1,59 +1,64 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 
 import ProductsList from '../components/ProductsList';
-
 import ProductWizard from '../components/ProductWizard';
 import PDFWizard from '../components/PDFWizard';
+
+import { useAppDispatch, useAppSelector } from '../hooks';
 import {
   addProductToStock,
   editProductInStock,
-  initEditProductInStock,
-  deleteProductInStock,
-} from '../helpers/dbActions';
-import {
-  fetchStock,
-  setAddFormVisibility,
-  setEditFormVisibility,
-  setPdfFormVisibility,
-} from '../actions';
+  deleteProductInStock
+} from '../features/stock/stockSlice';
 
 export const StockView = () => {
-  const dispatch = useDispatch();
-  const stock = useSelector(state => state.stock.products);
-  const code = useSelector(state => state.app.editFormProductCode);
-  const products = useSelector(state => state.products.products);
-  const isPDFFormVisible = useSelector(state => state.app.pdfFormVisibility);
-  const isAddFormVisible = useSelector(state => state.app.addFormVisibility);
-  const isEditFormVisible = useSelector(state => state.app.editFormVisibility);
+  const dispatch = useAppDispatch();
+  const stock = useAppSelector(state => state.stock.products);
+  const products = useAppSelector(state => state.products.products);
 
-  useEffect(() => {
-    dispatch(fetchStock());
-  }, []); // eslint-disable-line
+  const [isAddFormVisible, setAddFormVisibility] = useState(false);
+  const [isEditFormVisible, setEditFormVisibility] = useState(false);
+  const [isPDFFormVisible, setPDFFormVisibility] = useState(false);
+  const [editFormProductCode, setEditFormProductCode] = useState(null);
+
+  const dispatchAddProductToStock = (product) => dispatch(addProductToStock(product));
+  const dispatchEditProductInStock = (code) => dispatch(editProductInStock(code));
+  const dispatchDeleteProductInStock = (code) => {
+    const confirmation = window.confirm(`Czy na pewno chcesz usunąć produkt o kodzie ${code} ze spisu z natury?`);
+    if (confirmation) {
+      dispatch(deleteProductInStock(code));
+    }
+  };
+
+  const initEditStockForm = (code) => {
+    setEditFormVisibility(true);
+    setEditFormProductCode(code);
+  }
 
   const actions = [
     {
       title: 'Edytuj',
-      onClick: initEditProductInStock,
+      onClick: initEditStockForm,
       variant: 'light',
     },
     {
       title: 'Usuń',
-      onClick: deleteProductInStock,
+      onClick: dispatchDeleteProductInStock,
       variant: 'danger',
     },
   ];
 
-    // NOTE: x))))))
-    const asdf = products && products.filter(product => product.code === code);
-    const zxcv = stock && stock.filter(product => product.code === code);
-    let defaultValues = asdf && asdf.length > 0 && {
-      code,
-      name: asdf[0].name,
-      price: asdf[0].price,
-      measureUnit: asdf[0].measureUnit,
-      amount: zxcv[0].amount,
-    };
+  const product = products?.filter(product => product.code === editFormProductCode);
+  const stockItem = stock?.filter(product => product.code === editFormProductCode);
+  const defaultValues = product?.length > 0 && stock?.length > 0 && {
+    code: editFormProductCode,
+    name: product[0].name,
+    price: product[0].price,
+    measureUnit: product[0].measureUnit,
+    amount: stockItem[0].amount,
+  }
+
+  const buttonClasses = 'm-1 py-2 px-4 rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-800';
 
   return (
     <>
@@ -62,14 +67,14 @@ export const StockView = () => {
           <h2 className="my-1">Widok spisu z natury</h2>
           <div>
             <button
-              className="m-1 py-2 px-4 rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-800"
-              onClick={() => dispatch(setAddFormVisibility(true))}
+              className={buttonClasses}
+              onClick={() => setAddFormVisibility(true)}
             >
               Dodaj produkt
             </button>
             <button
-              className="m-1 py-2 px-4 rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-800 "
-              onClick={() => dispatch(setPdfFormVisibility(true))}
+              className={buttonClasses}
+              onClick={() => setPDFFormVisibility(true)}
               >
                 Generuj PDF
             </button>
@@ -83,26 +88,26 @@ export const StockView = () => {
         title="Inwentaryzacja"
         data={stock} />
       {isAddFormVisible && <ProductWizard
-        buttons={{ title: 'Dodaj', onClick: addProductToStock}}
+        buttons={{ title: 'Dodaj', onClick: dispatchAddProductToStock}}
         disabledFields={['name']}
         fields={['name', 'code', 'amount']}
         mode='stock'
-        onHide={() => dispatch(setAddFormVisibility(false))}
+        onHide={() => setAddFormVisibility(false)}
         show={isAddFormVisible}
         title='Dodaj produkt do spisu z natury'
       />}
       {isEditFormVisible && <ProductWizard
-        buttons={{ title: 'Edytuj', onClick: editProductInStock }}
+        buttons={{ title: 'Edytuj', onClick: dispatchEditProductInStock }}
         defaultValues={defaultValues}
         disabledFields={['code', 'name']}
         fields={['name', 'code', 'amount']}
-        onHide={() => dispatch(setEditFormVisibility(false))}
+        onHide={() => setEditFormVisibility(false)}
         show={isEditFormVisible}
         title='Edytuj produkt w spisie z natury'
         mode="stock"
       />}
       {isPDFFormVisible && <PDFWizard
-        onHide={() => dispatch(setPdfFormVisibility(false))}
+        onHide={() => setPDFFormVisibility(false)}
         show={isPDFFormVisible} />}
     </>
   );
