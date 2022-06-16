@@ -122,14 +122,14 @@ export const PDFGenerator = ({ membersCount, paginationAlignment }) => {
     for (let i = 0; i < products.length; i++) {
       const newItem = [];
       newItem.push(i + 1);
-      newItem.push(products[i].Code);
-      newItem.push(products[i].Name);
-      newItem.push(products[i].Amount);
-      newItem.push(products[i].MeasureUnit);
-      newItem.push({ text: getIntegerPart(products[i].Price), alignment: 'right' });
-      newItem.push({ text: fractionalDigitsAsStr(products[i].Price), alignment: 'right' });
-      newItem.push({ text: getIntegerPart(products[i].TotalValue), alignment: 'right' });
-      newItem.push({ text: fractionalDigitsAsStr(products[i].TotalValue), alignment: 'right' });
+      newItem.push(products[i].code);
+      newItem.push(products[i].name);
+      newItem.push(products[i].amount);
+      newItem.push(products[i].measureUnit);
+      newItem.push({ text: getIntegerPart(products[i].price), alignment: 'right' });
+      newItem.push({ text: fractionalDigitsAsStr(products[i].price), alignment: 'right' });
+      newItem.push({ text: getIntegerPart(products[i].totalValue), alignment: 'right' });
+      newItem.push({ text: fractionalDigitsAsStr(products[i].totalValue), alignment: 'right' });
       newItem.push('');
 
       newTableHeader.push(newItem);
