@@ -1,9 +1,4 @@
 import React, { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import ToggleButton from 'react-bootstrap/ToggleButton';
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
 
 import { PDFGenerator } from '../helpers/pdf';
 
@@ -13,10 +8,7 @@ export const GeneratePDFView = () => {
   const [membersCount, setMembersCount] = useState<number>(3);
   const [paginationAlignment, setPaginationAlignment] = useState<PaginationAlignment>('none');
 
-  // NOTE: is this type correct?
-  const generatePDF = (e: React.BaseSyntheticEvent) => {
-    e.preventDefault();
-
+  const generatePDF = () => {
     const config = {
       membersCount,
       paginationAlignment,
@@ -25,36 +17,45 @@ export const GeneratePDFView = () => {
     PDFGenerator(config);
   }
 
+  const buttonClasses = 'm-1 py-2 px-4 rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-800';
+
   return (
     <>
-      <Form>
-        <Col className="my-2">
-          <h5>Numerowanie stron</h5>
-          <ToggleButtonGroup
-            name="footer-page-number"
-            onChange={setPaginationAlignment}
-            type="radio"
-            value={paginationAlignment}
-          >
-            <ToggleButton value="none">Brak</ToggleButton>
-            <ToggleButton value="left">Lewa</ToggleButton>
-            <ToggleButton value="center">Środek</ToggleButton>
-            <ToggleButton value="right">Prawa</ToggleButton>
-          </ToggleButtonGroup>
-        </Col>
-        <Col>
-          <h5>Liczba osób sporządzających spis</h5>
-          <Form.Control
-            type="number"
-            min="1"
-            value={membersCount}
-            onChange={(e) => { setMembersCount(parseInt(e.target.value)) }}
-          />
-        </Col>
-      </Form>
-      <Button onClick={generatePDF}>
+      <div className="my-2">
+        <label htmlFor="pagination">Numerowanie Stron</label>
+        <select
+          id="pagination"
+          name="pagination"
+          onChange={(e) => {
+            setPaginationAlignment(e.target.value as PaginationAlignment);
+          }}
+          value={paginationAlignment}
+        >
+          <option value="none">Brak</option>
+          <option value="left">Lewa</option>
+          <option value="center">Środek</option>
+          <option value="right">Prawa</option>
+        </select>
+
+      </div>
+
+      <div>
+        <label htmlFor="asdf">Liczba osób sporządzających spis</label>
+        <input
+          id="asdf"
+          min="1"
+          onChange={(e) => { setMembersCount(parseInt(e.target.value)) }}
+          type="number"
+          value={membersCount}
+        />
+      </div>
+
+      <button
+        className={buttonClasses}
+        onClick={generatePDF}
+      >
         Generuj
-      </Button>
+      </button>
     </>
   );
 }

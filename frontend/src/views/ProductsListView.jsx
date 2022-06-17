@@ -15,13 +15,20 @@ export const ProductsListView = () => {
   const dispatch = useAppDispatch();
   const products = useAppSelector(state => state.products.products);
 
-  const [isAddFormVisible, setAddFormVisibility] = useState(false);
-  const [isEditFormVisible, setEditFormVisibility] = useState(false);
-  const [editFormProductCode, setEditFormProductCode] = useState(null);
+  const [wizardProductCode, setWizardProductCode] = useState(null);
+  const [isWizardVisible, setWizardVisibility] = useState(false);
   const [isFilterFormVisible, setFilterFormVisibility] = useState(false);
 
-  const dispatchAddProduct = (product) => dispatch(addProduct(product));
-  const dispatchEditProduct = (code) => dispatch(editProduct(code));
+  const dispatchAddProduct = (product) => {
+    dispatch(addProduct(product));
+    resetWizardState();
+  }
+
+  const dispatchEditProduct = (code) => {
+    dispatch(editProduct(code));
+    resetWizardState();
+  }
+
   const dispatchDeleteProduct = (code) => {
     const confirmation = window.confirm(`Czy na pewno chcesz usunąć produkt o kodzie ${code} z bazy produktów?`);
     if (confirmation) {
@@ -30,11 +37,16 @@ export const ProductsListView = () => {
   };
 
   const initEditProductForm = (code) => {
-    setEditFormVisibility(true);
-    setEditFormProductCode(code);
+    setWizardProductCode(code);
+    setWizardVisibility(true);
   }
 
-  const productsListActions = [
+  const resetWizardState = () => {
+    setWizardVisibility(false);
+    setWizardProductCode(null);
+  }
+
+  const productsListButtons = [
     {
       title: 'Edytuj',
       onClick: initEditProductForm,
@@ -47,9 +59,9 @@ export const ProductsListView = () => {
     },
   ];
 
-  const product = products?.filter(product => product.code === editFormProductCode);
+  const product = products?.filter(product => product.code === wizardProductCode);
   const defaultValues = product?.length > 0 && {
-    code: editFormProductCode,
+    code: wizardProductCode,
     name: product[0].name,
     price: product[0].price,
     measureUnit: product[0].measureUnit,
@@ -57,15 +69,19 @@ export const ProductsListView = () => {
 
   const buttonClasses = 'm-1 py-2 px-4 rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-800';
 
+  // FIXME: Bug: hit edit on one product and then on another one - data in form doesn't change
   return (
     <>
       <div className="container px-0">
         <div className="container my-2 px-0 flex flex-row justify-between content-center">
-          <h2 className="my-1">Widok listy produktów</h2>
+          <h2 className="my-1">Baza produktów</h2>
           <div>
             <button
               className={buttonClasses}
-              onClick={() => setAddFormVisibility(true)}
+              onClick={() => {
+                setWizardVisibility(true);
+                setWizardProductCode(null);
+              }}
             >
               Dodaj nowy produkt
             </button>
@@ -81,29 +97,27 @@ export const ProductsListView = () => {
 
       {isFilterFormVisible && <FilterListForm data={products} />}
 
-      <ProductsList
-        type="compact"
-        actions={productsListActions}
-        title="Lista produktów w bazie danych"
-        data={products} />
-      {isAddFormVisible && <ProductWizard
-        buttons={{ title: 'Dodaj', onClick: dispatchAddProduct }}
+      {isWizardVisible && !wizardProductCode && <ProductWizard
+        buttonTitle="Dodaj"
+        buttonAction={dispatchAddProduct}
         fields={['name', 'code', 'measureUnit', 'price']}
-        mode='products'
-        onHide={() => setAddFormVisibility(false)}
-        show={!!isAddFormVisible}
-        title='Dodaj produkt do bazy danych'
+        mode="products"
       />}
-      {isEditFormVisible && <ProductWizard
-        buttons={{ title: 'Edytuj', onClick: dispatchEditProduct }}
+
+      {isWizardVisible && wizardProductCode && <ProductWizard
+        buttonTitle="Edytuj"
+        buttonAction={dispatchEditProduct}
         defaultValues={defaultValues}
         disabledFields={['code']}
         fields={['name', 'code', 'measureUnit', 'price']}
-        onHide={() => setEditFormVisibility(false)}
-        show={!!isEditFormVisible}
-        title='Edytuj produkt z bazy danych'
-        mode='products'
+        mode="products"
       />}
+
+      <ProductsList
+        buttons={productsListButtons}
+        data={products}
+        type="compact"
+      />
     </>
   );
 }

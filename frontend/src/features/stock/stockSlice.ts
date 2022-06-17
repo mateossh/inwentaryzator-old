@@ -18,6 +18,7 @@ const fetchConfig = {
 export interface StockProduct {
   code: string
   amount: number
+  totalValue?: number
 }
 
 export const fetchStock = createAsyncThunk(

@@ -15,12 +15,19 @@ export const StockView = () => {
   const stock = useAppSelector(state => state.stock.products);
   const products = useAppSelector(state => state.products.products);
 
-  const [isAddFormVisible, setAddFormVisibility] = useState(false);
-  const [isEditFormVisible, setEditFormVisibility] = useState(false);
-  const [editFormProductCode, setEditFormProductCode] = useState(null);
+  const [isWizardVisible, setWizardVisibility] = useState(false);
+  const [wizardProductCode, setWizardProductCode] = useState(null);
 
-  const dispatchAddProductToStock = (product) => dispatch(addProductToStock(product));
-  const dispatchEditProductInStock = (code) => dispatch(editProductInStock(code));
+  const dispatchAddProductToStock = (product) => {
+    dispatch(addProductToStock(product));
+    resetWizardState();
+  }
+
+  const dispatchEditProductInStock = (code) => {
+    dispatch(editProductInStock(code));
+    resetWizardState();
+  }
+
   const dispatchDeleteProductInStock = (code) => {
     const confirmation = window.confirm(`Czy na pewno chcesz usunąć produkt o kodzie ${code} ze spisu z natury?`);
     if (confirmation) {
@@ -29,11 +36,16 @@ export const StockView = () => {
   };
 
   const initEditStockForm = (code) => {
-    setEditFormVisibility(true);
-    setEditFormProductCode(code);
+    setWizardVisibility(true);
+    setWizardProductCode(code);
   }
 
-  const actions = [
+  const resetWizardState = () => {
+    setWizardVisibility(false);
+    setWizardProductCode(null);
+  }
+
+  const buttons = [
     {
       title: 'Edytuj',
       onClick: initEditStockForm,
@@ -46,10 +58,10 @@ export const StockView = () => {
     },
   ];
 
-  const product = products?.filter(product => product.code === editFormProductCode);
-  const stockItem = stock?.filter(product => product.code === editFormProductCode);
+  const product = products?.filter(product => product.code === wizardProductCode);
+  const stockItem = stock?.filter(product => product.code === wizardProductCode);
   const defaultValues = product?.length > 0 && stock?.length > 0 && {
-    code: editFormProductCode,
+    code: wizardProductCode,
     name: product[0].name,
     price: product[0].price,
     measureUnit: product[0].measureUnit,
@@ -58,6 +70,7 @@ export const StockView = () => {
 
   const buttonClasses = 'm-1 py-2 px-4 rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-800';
 
+  // FIXME: Bug: hit edit on one product and then on another one - data in form doesn't change
   return (
     <>
       <div className="container px-0">
@@ -66,7 +79,10 @@ export const StockView = () => {
           <div>
             <button
               className={buttonClasses}
-              onClick={() => setAddFormVisibility(true)}
+              onClick={() => {
+                setWizardVisibility(true);
+                setWizardProductCode(null);
+              }}
             >
               Dodaj produkt
             </button>
@@ -74,30 +90,31 @@ export const StockView = () => {
         </div>
       </div>
 
-      <ProductsList
-        type="full"
-        actions={actions}
-        title="Inwentaryzacja"
-        data={stock} />
-      {isAddFormVisible && <ProductWizard
-        buttons={{ title: 'Dodaj', onClick: dispatchAddProductToStock}}
+      {isWizardVisible && !wizardProductCode && <ProductWizard
+        buttonTitle="Dodaj"
+        buttonAction={dispatchAddProductToStock}
         disabledFields={['name']}
         fields={['name', 'code', 'amount']}
-        mode='stock'
-        onHide={() => setAddFormVisibility(false)}
-        show={isAddFormVisible}
-        title='Dodaj produkt do spisu z natury'
+        mode="stock"
+        onHide={() => resetWizardState()}
       />}
-      {isEditFormVisible && <ProductWizard
-        buttons={{ title: 'Edytuj', onClick: dispatchEditProductInStock }}
+
+      {isWizardVisible && wizardProductCode && <ProductWizard
+        buttonTitle="Edytuj"
+        buttonAction={dispatchEditProductInStock}
         defaultValues={defaultValues}
         disabledFields={['code', 'name']}
         fields={['name', 'code', 'amount']}
-        onHide={() => setEditFormVisibility(false)}
-        show={isEditFormVisible}
-        title='Edytuj produkt w spisie z natury'
+        onHide={() => resetWizardState()}
         mode="stock"
       />}
+
+      <ProductsList
+        buttons={buttons}
+        data={stock}
+        title="Inwentaryzacja"
+        type="full"
+      />
     </>
   );
 }

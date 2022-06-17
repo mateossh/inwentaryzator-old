@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAppDispatch } from '../hooks';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
 // import { receiveProductsView } from '../actions';
 
 import { fetchProducts } from '../features/products/productSlice';
@@ -31,32 +29,30 @@ export const FilterListForm = ({ data: products, ...props }) => {
   }, [name, code]);
 
   return (
-    <Form>
+    <div>
       <h2>Filtruj liste produktów</h2>
       <p>Znajdź produkt po nazwie LUB kodzie produktu</p>
-      <Form.Row>
-        <Col>
-          <Form.Control
-            placeholder="Nazwa"
-            name="name"
-            onChange={(e) => {
-              setName(e.target.value);
-            }}/>
-        </Col>
-        <Col>
-          <Form.Control
-            placeholder="Kod produktu"
-            name="code"
-            type="number"
-            min="1"
-            onChange={(e) => {
-              setCode(e.target.value);
-            }}/>
-        </Col>
-      </Form.Row>
-    </Form>
+
+      <div>
+        <input
+          name="name"
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+          placeholder="Nazwa"
+        />
+        <input
+          min="1"
+          name="code"
+          onChange={(e) => {
+            setCode(e.target.value);
+          }}
+          placeholder="Kod produktu"
+          type="number"
+        />
+      </div>
+    </div>
   );
 }
 
 export default FilterListForm;
-
