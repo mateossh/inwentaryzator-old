@@ -1,28 +1,35 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export interface Toast {
-  id: string,
+export interface CreateToastArgs {
   title: string,
   message: string,
-  isVisible: boolean,
+}
+
+export type Toast = CreateToastArgs & { id: number }
+
+interface ToastsState {
+  toasts: Toast[]
+}
+
+const initialState: ToastsState = {
+  toasts: [],
 }
 
 const toastSlice = createSlice({
   name: 'toast',
-  initialState: [],
+  initialState,
   reducers: {
-    createToast(state, action) {
-      // @ts-ignore
-      state.push(action.payload);
+    createToast(state, action: PayloadAction<CreateToastArgs>) {
+      const toast = {
+        id: Date.now(),
+        ...action.payload,
+      };
+
+      state.toasts.push(toast);
     },
-    hideToast(state, action) {
-      // @ts-ignore
-      const toastIndex = state.findIndex(toast => toast.code === action.payload.code);
-      // @ts-ignore
-      state[toastIndex] = action.payload;
-
-
-      // TODO: how to implement removing invisible toasts from state? thunk
+    hideToast(state, action: PayloadAction<number>) {
+      const toastIndex = state.toasts.findIndex(toast => toast.id === action.payload);
+      state.toasts.splice(toastIndex, 1);
     },
   },
 });

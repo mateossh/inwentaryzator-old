@@ -4,7 +4,7 @@ import { hideToast } from '../features/toasts/toastSlice';
 
 export const ToastWrapper = () => {
   const dispatch = useAppDispatch();
-  const toasts = useAppSelector(state => state.toasts);
+  const toasts = useAppSelector(state => state.toasts.toasts);
 
   // NOTE: Aria things are from react-bootstrap
   // https://getbootstrap.com/docs/4.3/components/toasts/#placement
@@ -17,7 +17,7 @@ export const ToastWrapper = () => {
     >
       {toasts?.map(toast => (
         <div
-          className={`mb-2 p-2 max-w-xl bg-white border rounded ${toast.isVisible ? '' : 'hidden'}`}
+          className={`mb-2 p-2 max-w-xl bg-white border rounded`}
           key={toast.id}
         >
           <div className="px-1 m-0 text-gray-800 font-semibold flex flex-row justify-between">
