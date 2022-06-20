@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppSelector } from '../hooks';
 
 import { Product } from '../features/products/productSlice';
@@ -16,9 +16,9 @@ interface DefaultValues {
 };
 
 interface Props {
-  children: React.ReactNode
-  defaultValues: DefaultValues
-  disabledFields: FormField[]
+  children?: React.ReactNode
+  defaultValues?: DefaultValues
+  disabledFields?: FormField[]
   fields: FormField[]
   mode: Mode
   buttonTitle: string
@@ -53,6 +53,14 @@ export const ProductWizard = ({
       ? setName(results[0].name)
       : setName('')
   }
+
+  useEffect(() => {
+    setName(defaultValues?.name);
+    setCode(defaultValues?.code);
+    setPrice(defaultValues?.price);
+    setMeasureUnit(defaultValues?.measureUnit);
+    setAmount(defaultValues?.amount);
+  }, [defaultValues]);
 
   const findProductWithName = (searchedPhrase: string) => {
     const results: Product[] = products.filter((product: Product) => product.name.includes(searchedPhrase));
