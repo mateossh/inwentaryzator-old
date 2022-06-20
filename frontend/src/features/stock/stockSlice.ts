@@ -1,12 +1,22 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createToast } from '../toasts/toastSlice';
 
-// interface AppState {
-//
-// }
-//
-// const initialState: AppState = {
-//
-// }
+interface StockState {
+  loading: 'idle' | 'pending'
+  isError: boolean
+  products: Stock[]
+}
+
+export interface Stock {
+  code: string
+  amount: number
+}
+
+const initialState: StockState = {
+  loading: 'idle',
+  products: [],
+  isError: false,
+}
 
 const fetchConfig = {
   headers: {
@@ -32,7 +42,7 @@ export const fetchStock = createAsyncThunk(
 
 export const addProductToStock = createAsyncThunk(
   'stock/addProduct',
-  async (product: StockProduct & BodyInit) => {
+  async (product: StockProduct, thunkAPI) => {
     const config = {
       body: JSON.stringify(product),
       method: 'POST',
@@ -40,14 +50,24 @@ export const addProductToStock = createAsyncThunk(
     }
 
     const response = await fetch('http://localhost:8080/api/v1/stock', config);
-    const createdProduct = await response.json();
-    return createdProduct;
+    if (response.status !== 201) {
+      const error = await response.json();
+      const toast = {
+        title: 'Błąd',
+        message: `Wystąpił błąd: ${error?.errors[0].message}`,
+      };
+
+      thunkAPI.dispatch(createToast(toast));
+      return thunkAPI.rejectWithValue(error);
+    }
+
+    return await response.json();
   }
 )
 
 export const editProductInStock = createAsyncThunk(
   'stock/editProduct',
-  async (product: StockProduct & BodyInit) => {
+  async (product: StockProduct, thunkAPI) => {
     const config = {
       body: JSON.stringify(product),
       method: 'PUT',
@@ -55,32 +75,47 @@ export const editProductInStock = createAsyncThunk(
     }
 
     const response = await fetch(`http://localhost:8080/api/v1/stock/${product.code}`, config);
-    const editedProduct = await response.json();
-    return editedProduct;
+    if (response.status !== 200) {
+      const error = await response.json();
+      const toast = {
+        title: 'Błąd',
+        message: `Wystąpił błąd: ${error.errors[0].message}`,
+      };
+
+      thunkAPI.dispatch(createToast(toast));
+      return thunkAPI.rejectWithValue(error);
+    }
+    return await response.json();
   }
 )
 
 export const deleteProductInStock = createAsyncThunk(
   'stock/deleteProduct',
-  async (code: Number & BodyInit) => {
+  async (code: Number, thunkAPI) => {
     const config = {
       method: 'DELETE',
       ...fetchConfig,
     }
 
     const response = await fetch(`http://localhost:8080/api/v1/stock/${code}`, config);
-    const deletedProduct = await response.json();
-    return deletedProduct;
+    if (response.status !== 200) {
+      const error = await response.json();
+      const toast = {
+        title: 'Błąd',
+        message: `Wystąpił błąd: ${error.errors[0].message}`,
+      };
+
+      thunkAPI.dispatch(createToast(toast));
+      return thunkAPI.rejectWithValue(error);
+    }
+
+    return await response.json();
   }
 )
 
 const stockSlice = createSlice({
   name: 'products',
-  initialState: {
-    loading: 'idle',
-    products: [],
-    isError: false,
-  },
+  initialState,
   reducers: {
     stockLoading(state) {
       // Use a "state machine" approach for loading state instead of booleans
@@ -94,14 +129,9 @@ const stockSlice = createSlice({
         state.products = action.payload
       }
     },
-    productAdded(state, action) {
-
-    },
-    productUpdated(state, action) {},
-    productDeleted(state, action) {},
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchStock.pending, (state, action) => {
+    builder.addCase(fetchStock.pending, (state) => {
       state.loading = 'pending';
     });
 
@@ -110,22 +140,18 @@ const stockSlice = createSlice({
       state.products = action.payload;
     });
 
-    builder.addCase(fetchStock.rejected, (state, action) => {
+    builder.addCase(fetchStock.rejected, (state) => {
       state.loading = 'idle';
       state.isError = true;
     });
 
-    builder.addCase(addProductToStock.pending, (state, action) => {
+    builder.addCase(addProductToStock.pending, (state) => {
       state.loading = 'pending';
       state.isError = false;
     });
 
-    builder.addCase(addProductToStock.fulfilled, (state, action) => {
+    builder.addCase(addProductToStock.fulfilled, (state, action: PayloadAction<Stock>) => {
       state.loading = 'idle';
-
-      console.log('asdf', action.payload);
-      // TODO: check if user enters int instead of float in price
-      // @ts-ignore
       state.products.push(action.payload);
     });
 
@@ -190,9 +216,6 @@ const stockSlice = createSlice({
 export const {
   stockLoading,
   stockReceived,
-  productAdded,
-  productUpdated,
-  productDeleted
 } = stockSlice.actions;
 
 export default stockSlice.reducer;
