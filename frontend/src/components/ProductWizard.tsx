@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useAppSelector } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 
 import { Product } from '../features/products/productSlice';
+import { createToast } from '../features/toasts/toastSlice';
 
 type Mode = "stock" | "products";
 
@@ -40,7 +41,7 @@ export const ProductWizard = ({
   const [amount, setAmount] = useState<string>(defaultValues?.amount ?? '');
 
   const products = useAppSelector(state => state.products.products);
-  const data = { name, code, price, measureUnit, amount };
+  const dispatch = useAppDispatch();
 
   const [isSearchByNameFormVisible, setSearchByNameFormVisibility] = useState(false);
   const [searchName, setSearchName] = useState('');
@@ -71,6 +72,87 @@ export const ProductWizard = ({
 
   const buttonClasses = 'm-1 py-2 px-4 rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-800';
   const inputClasses = 'border-solid border-2 disabled:bg-gray-200';
+
+  const handleButtonClick = async () => {
+    // TODO: construct data with only necessary fields
+
+    let toast = null;
+
+    const isFloatRegex = '^\\d*[.,]\\d\\d$';
+    const priceDotSeparator = price.replace(',', '.');
+    const isPriceInvalid = fields?.includes('price') && !priceDotSeparator.match(isFloatRegex);
+    const isAmountInvalid = fields?.includes('amount') && isNaN(parseInt(amount));
+    const isCodeInvalid = fields?.includes('code') && isNaN(parseInt(code));
+
+    console.log('priceDotSeparator', priceDotSeparator);
+    console.log('isPriceInvalid', isPriceInvalid);
+
+    if (name === '') {
+      toast = {
+        title: 'Błąd',
+        message: 'Pole "nazwa" nie może być puste',
+      }
+    }
+
+    if (code === '') {
+      toast = {
+        title: 'Błąd',
+        message: 'Pole "kod produktu" nie może być puste',
+      }
+    }
+
+    if (isCodeInvalid) {
+      toast = {
+        title: 'Błąd',
+        message: 'Niepoprawna wartość w polu "kod produktu"',
+      }
+    }
+
+    if (isPriceInvalid) {
+      toast = {
+        title: 'Błąd',
+        message: 'Niepoprawna wartość w polu "cena"',
+      }
+    }
+
+    if (parseFloat(priceDotSeparator) <= 0) {
+      toast = {
+        title: 'Błąd',
+        message: 'Cena nie może być <= 0',
+      }
+    }
+
+    if (isAmountInvalid) {
+      toast = {
+        title: 'Błąd',
+        message: 'Niepoprawna wartość w polu "ilość"',
+      }
+    }
+
+    if (parseInt(amount) <= 0) {
+      toast = {
+        title: 'Błąd',
+        message: 'Cena nie może być <= 0',
+      }
+    }
+
+    if (measureUnit === '') {
+      toast = {
+        title: 'Błąd',
+        message: 'Pole "jednostka miary" nie może być puste',
+      }
+    }
+
+    if (toast) {
+      dispatch(createToast(toast));
+      return;
+    }
+
+    const data = { name, code, price, measureUnit, amount };
+    console.log(`ProductWizard: onClick data ${JSON.stringify(data)}`);
+
+    buttonAction(data);
+  }
 
   return (
     <>
@@ -213,24 +295,7 @@ export const ProductWizard = ({
 
       <button
         className={buttonClasses}
-        onClick={async (e: React.MouseEvent) => {
-          e.preventDefault();
-          console.log(`ProductWizard: onClick data ${JSON.stringify(data)}`);
-
-          const res = buttonAction(data);
-
-          // if (res.status === 200 || res.status === 201) {
-          //   setErrorMessage('');
-          //   setErrorState(false);
-          //   onHide();
-          // }
-
-          // if (res.status === 400) {
-          //   setErrorState(true);
-          //   setErrorMessage(errorDetails.errors[0].message);
-          //   console.error('ERROR OCCURED', errorDetails);
-          // }
-        }}
+        onClick={handleButtonClick}
       >
         {buttonTitle}
       </button>
