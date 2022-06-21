@@ -10,9 +10,9 @@ type FormField = 'name' | 'code' | 'price' | 'measureUnit' | 'amount';
 interface DefaultValues {
   name?: string
   code?: string
-  price?: number
+  price?: string
   measureUnit?: string
-  amount?: number
+  amount?: string
 };
 
 interface Props {
@@ -32,17 +32,16 @@ export const ProductWizard = ({
   mode,
   buttonTitle,
   buttonAction,
-  }: Props) => {
-  // NOTE: why price and amount states are '' by default:
-  // When default value was 0, number input had no placeholder, but if I set
-  // that to '', it has placeholder like every other input in forms
-  const [name, setName] = useState(defaultValues?.name);
-  const [code, setCode] = useState(defaultValues?.code);
-  const [price, setPrice] = useState(defaultValues?.price);
-  const [measureUnit, setMeasureUnit] = useState(defaultValues?.measureUnit);
-  const [amount, setAmount] = useState(defaultValues?.amount);
+}: Props) => {
+  const [name, setName] = useState<string>(defaultValues?.name ?? '');
+  const [code, setCode] = useState<string>(defaultValues?.code ?? '');
+  const [price, setPrice] = useState<string>(defaultValues?.price ?? '');
+  const [measureUnit, setMeasureUnit] = useState<string>(defaultValues?.measureUnit ?? '');
+  const [amount, setAmount] = useState<string>(defaultValues?.amount ?? '');
+
   const products = useAppSelector(state => state.products.products);
   const data = { name, code, price, measureUnit, amount };
+
   const [isSearchByNameFormVisible, setSearchByNameFormVisibility] = useState(false);
   const [searchName, setSearchName] = useState('');
   const [searchResults, setSearchResults] = useState<Product[]>([]);
@@ -55,11 +54,11 @@ export const ProductWizard = ({
   }
 
   useEffect(() => {
-    setName(defaultValues?.name);
-    setCode(defaultValues?.code);
-    setPrice(defaultValues?.price);
-    setMeasureUnit(defaultValues?.measureUnit);
-    setAmount(defaultValues?.amount);
+    if (defaultValues?.name) setName(defaultValues?.name);
+    if (defaultValues?.code) setCode(defaultValues?.code);
+    if (defaultValues?.price) setPrice(defaultValues?.price);
+    if (defaultValues?.measureUnit) setMeasureUnit(defaultValues?.measureUnit);
+    if (defaultValues?.amount) setAmount(defaultValues?.amount);
   }, [defaultValues]);
 
   const findProductWithName = (searchedPhrase: string) => {
@@ -118,10 +117,10 @@ export const ProductWizard = ({
           min="1"
           name="price"
           onChange={(e) => {
-            setPrice(parseFloat(e.target.value));
+            setPrice(e.target.value);
           }}
           placeholder="Cena jednostkowa"
-          type="number"
+          type="text"
           value={price}
         />
       </div>}
@@ -150,10 +149,10 @@ export const ProductWizard = ({
           min="1"
           name="amount"
           onChange={(e) => {
-            setAmount(parseInt(e.target.value));
+            setAmount(e.target.value);
           }}
           placeholder="Ilość"
-          type="number"
+          type="text"
           value={amount}
         />
       </div>}
