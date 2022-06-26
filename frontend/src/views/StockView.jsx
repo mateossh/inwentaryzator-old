@@ -20,7 +20,9 @@ export const StockView = () => {
 
   const dispatchAddProductToStock = (product) => {
     dispatch(addProductToStock(product));
-    resetWizardState();
+    // resetWizardState();
+
+    //TODO: if no error thrown -> clearWizard
   }
 
   const dispatchEditProductInStock = (code) => {
@@ -70,7 +72,6 @@ export const StockView = () => {
 
   const buttonClasses = 'm-1 py-2 px-4 rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-800';
 
-  // FIXME: Bug: hit edit on one product and then on another one - data in form doesn't change
   return (
     <>
       <div className="container px-0">

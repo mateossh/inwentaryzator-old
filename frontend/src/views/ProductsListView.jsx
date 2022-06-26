@@ -21,7 +21,9 @@ export const ProductsListView = () => {
 
   const dispatchAddProduct = (product) => {
     dispatch(addProduct(product));
-    resetWizardState();
+    // resetWizardState();
+
+    // TODO: if no error thrown -> clearWizard
   }
 
   const dispatchEditProduct = (code) => {
@@ -65,11 +67,10 @@ export const ProductsListView = () => {
     name: product[0].name,
     price: product[0].price,
     measureUnit: product[0].measureUnit,
-  };
+  }
 
   const buttonClasses = 'm-1 py-2 px-4 rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-800';
 
-  // FIXME: Bug: hit edit on one product and then on another one - data in form doesn't change
   return (
     <>
       <div className="container px-0">
